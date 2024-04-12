@@ -1,6 +1,5 @@
 package com.dogactanriverdi.e_commerceapp.data.source.remote.dto.product
 
-
 import com.google.gson.annotations.SerializedName
 
 data class ProductsDto(
