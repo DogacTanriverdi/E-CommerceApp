@@ -6,7 +6,7 @@ import com.dogactanriverdi.e_commerceapp.common.Constants.DELETE_FROM_CART
 import com.dogactanriverdi.e_commerceapp.common.Constants.GET_CART_PRODUCTS
 import com.dogactanriverdi.e_commerceapp.common.Constants.STORE
 import com.dogactanriverdi.e_commerceapp.common.Constants.STORE_NAME
-import com.dogactanriverdi.e_commerceapp.common.Constants.USER_ID
+import com.dogactanriverdi.e_commerceapp.common.Constants.CART_USER_ID
 import com.dogactanriverdi.e_commerceapp.data.source.remote.dto.cart.CartResponseDto
 import com.dogactanriverdi.e_commerceapp.data.source.remote.dto.product.ProductsDto
 import com.dogactanriverdi.e_commerceapp.domain.model.cart.AddToCartBody
@@ -23,7 +23,7 @@ interface CartService {
     @GET(GET_CART_PRODUCTS)
     suspend fun getCartProducts(
         @Header(STORE) store: String = STORE_NAME,
-        @Query(USER_ID) userId: String
+        @Query(CART_USER_ID) userId: String
     ): ProductsDto
 
     @POST(ADD_TO_CART)
