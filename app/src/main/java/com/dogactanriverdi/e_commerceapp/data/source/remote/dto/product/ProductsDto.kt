@@ -7,7 +7,7 @@ data class ProductsDto(
     @SerializedName("message")
     val message: String?,
     @SerializedName("products")
-    val products: List<Product?>?,
+    val products: List<Product>?,
     @SerializedName("status")
     val status: Int?
 )
