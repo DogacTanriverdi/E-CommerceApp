@@ -42,4 +42,11 @@ object Constants {
 
     // Queries
     const val PRODUCT_ID = "id"
+
+    // Favorites
+    const val ADD_TO_FAVORITES = "add_to_favorites"
+    const val GET_FAVORITES = "get_favorites"
+    const val GET_FAVORITE_COUNT = "get_favorite_count"
+    const val DELETE_FROM_FAVORITES = "delete_from_favorites"
+    const val CLEAR_FAVORITES = "clear_favorites"
 }
