@@ -22,4 +22,14 @@ object Constants {
     // Queries
     const val CATEGORY = "category"
     const val SEARCH_QUERY = "query"
+
+    // Cart
+    // Endpoints
+    const val GET_CART_PRODUCTS = "get_cart_products"
+    const val ADD_TO_CART = "add_to_cart"
+    const val DELETE_FROM_CART = "delete_from_cart"
+    const val CLEAR_CART = "clear_cart"
+
+    // Queries
+    const val USER_ID = "userId"
 }
