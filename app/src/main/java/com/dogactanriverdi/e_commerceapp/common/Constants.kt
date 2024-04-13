@@ -35,4 +35,11 @@ object Constants {
 
     // Categories
     const val GET_CATEGORIES = "get_categories"
+
+    // Detail
+    // Endpoints
+    const val GET_PRODUCT_DETAIL = "get_product_detail"
+
+    // Queries
+    const val PRODUCT_ID = "id"
 }
