@@ -32,4 +32,7 @@ object Constants {
 
     // Queries
     const val USER_ID = "userId"
+
+    // Categories
+    const val GET_CATEGORIES = "get_categories"
 }
