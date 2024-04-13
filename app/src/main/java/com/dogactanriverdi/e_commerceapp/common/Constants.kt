@@ -49,4 +49,10 @@ object Constants {
     const val GET_FAVORITE_COUNT = "get_favorite_count"
     const val DELETE_FROM_FAVORITES = "delete_from_favorites"
     const val CLEAR_FAVORITES = "clear_favorites"
+
+    // Addresses
+    const val ADD_ADDRESS = "add_address"
+    const val GET_ADDRESSES = "get_addresses"
+    const val DELETE_FROM_ADDRESSES = "delete_from_addresses"
+    const val CLEAR_ADDRESSES = "clear_addresses"
 }
