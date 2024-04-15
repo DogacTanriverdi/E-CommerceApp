@@ -1,4 +1,4 @@
-package com.dogactanriverdi.e_commerceapp.presentation.signup
+package com.dogactanriverdi.e_commerceapp.presentation.signup.state
 
 import com.dogactanriverdi.e_commerceapp.domain.model.auth.AuthResponse
 

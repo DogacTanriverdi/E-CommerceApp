@@ -6,6 +6,8 @@ import com.dogactanriverdi.e_commerceapp.common.Resource
 import com.dogactanriverdi.e_commerceapp.domain.model.favorite.AddToFavoritesBody
 import com.dogactanriverdi.e_commerceapp.domain.usecase.detail.GetProductDetailUseCase
 import com.dogactanriverdi.e_commerceapp.domain.usecase.favorite.AddToFavoritesUseCase
+import com.dogactanriverdi.e_commerceapp.presentation.detail.state.AddToFavoritesState
+import com.dogactanriverdi.e_commerceapp.presentation.detail.state.DetailState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

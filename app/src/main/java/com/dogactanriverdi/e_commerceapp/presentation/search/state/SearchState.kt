@@ -1,4 +1,4 @@
-package com.dogactanriverdi.e_commerceapp.presentation.search
+package com.dogactanriverdi.e_commerceapp.presentation.search.state
 
 import com.dogactanriverdi.e_commerceapp.domain.model.product.Products
 

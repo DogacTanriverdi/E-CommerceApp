@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dogactanriverdi.e_commerceapp.common.Resource
 import com.dogactanriverdi.e_commerceapp.domain.usecase.product.SearchProductUseCase
+import com.dogactanriverdi.e_commerceapp.presentation.search.state.SearchState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

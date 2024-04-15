@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.dogactanriverdi.e_commerceapp.common.Resource
 import com.dogactanriverdi.e_commerceapp.domain.model.auth.SignUpBody
 import com.dogactanriverdi.e_commerceapp.domain.usecase.auth.SignUpUseCase
+import com.dogactanriverdi.e_commerceapp.presentation.signup.state.SignUpState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

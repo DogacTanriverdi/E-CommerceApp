@@ -8,6 +8,9 @@ import com.dogactanriverdi.e_commerceapp.domain.model.user.EditProfileBody
 import com.dogactanriverdi.e_commerceapp.domain.usecase.user.ChangePasswordUseCase
 import com.dogactanriverdi.e_commerceapp.domain.usecase.user.EditProfileUseCase
 import com.dogactanriverdi.e_commerceapp.domain.usecase.user.GetUserUseCase
+import com.dogactanriverdi.e_commerceapp.presentation.profile.state.ChangePasswordState
+import com.dogactanriverdi.e_commerceapp.presentation.profile.state.EditProfileState
+import com.dogactanriverdi.e_commerceapp.presentation.profile.state.UserState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

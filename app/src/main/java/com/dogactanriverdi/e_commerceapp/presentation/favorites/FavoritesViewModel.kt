@@ -11,7 +11,7 @@ import com.dogactanriverdi.e_commerceapp.domain.usecase.favorite.ClearFavoritesU
 import com.dogactanriverdi.e_commerceapp.domain.usecase.favorite.DeleteFromFavoritesUseCase
 import com.dogactanriverdi.e_commerceapp.domain.usecase.favorite.GetFavoriteCountUseCase
 import com.dogactanriverdi.e_commerceapp.domain.usecase.favorite.GetFavoritesUseCase
-import com.dogactanriverdi.e_commerceapp.presentation.detail.AddToFavoritesState
+import com.dogactanriverdi.e_commerceapp.presentation.detail.state.AddToFavoritesState
 import com.dogactanriverdi.e_commerceapp.presentation.favorites.state.ClearFavoritesState
 import com.dogactanriverdi.e_commerceapp.presentation.favorites.state.DeleteFromFavoritesState
 import com.dogactanriverdi.e_commerceapp.presentation.favorites.state.FavoriteCountState
