@@ -5,6 +5,7 @@ object Constants {
     /*** Service ***/
 
     // Base
+    const val BASE_URL = "https://api.canerture.com/ecommerce/"
     const val STORE_NAME = "dogactnrvrdi_ecommerce"
 
     // Auth
