@@ -6,11 +6,13 @@ import com.dogactanriverdi.e_commerceapp.common.Resource
 import com.dogactanriverdi.e_commerceapp.domain.model.auth.SignInBody
 import com.dogactanriverdi.e_commerceapp.domain.usecase.auth.SignInUseCase
 import com.dogactanriverdi.e_commerceapp.presentation.signin.state.SignInState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class SignInViewModel @Inject constructor(
     private val useCase: SignInUseCase
 ) : ViewModel() {
@@ -18,7 +20,7 @@ class SignInViewModel @Inject constructor(
     private val _state = MutableStateFlow(SignInState())
     val state: StateFlow<SignInState> = _state
 
-    private fun signIn(signInBody: SignInBody) {
+    fun signIn(signInBody: SignInBody) {
         viewModelScope.launch {
             useCase(signInBody).collect { authResponse ->
                 when (authResponse) {
