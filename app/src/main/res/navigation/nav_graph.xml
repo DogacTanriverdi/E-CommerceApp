@@ -9,7 +9,7 @@
         android:id="@+id/signInFragment"
         android:name="com.dogactanriverdi.e_commerceapp.presentation.signin.SignInFragment"
         android:label="Sign In"
-        tools:layout="@layout/fragment_sign_in" >
+        tools:layout="@layout/fragment_sign_in">
         <action
             android:id="@+id/action_signInFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
@@ -40,6 +40,12 @@
         <action
             android:id="@+id/action_homeFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_seeAllFragment"
+            app:destination="@id/seeAllFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_categoriesFragment"
+            app:destination="@id/categoriesFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -72,15 +78,33 @@
         android:id="@+id/addressesFragment"
         android:name="com.dogactanriverdi.e_commerceapp.presentation.addresses.AddressesFragment"
         android:label="Addresses"
-        tools:layout="@layout/fragment_addresses"/>
+        tools:layout="@layout/fragment_addresses" />
     <fragment
         android:id="@+id/cartFragment"
         android:name="com.dogactanriverdi.e_commerceapp.presentation.cart.CartFragment"
         android:label="Cart"
-        tools:layout="@layout/fragment_cart"/>
+        tools:layout="@layout/fragment_cart" />
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.dogactanriverdi.e_commerceapp.presentation.detail.DetailFragment"
         android:label="Detail"
-        tools:layout="@layout/fragment_detail"/>
+        tools:layout="@layout/fragment_detail" />
+    <fragment
+        android:id="@+id/seeAllFragment"
+        android:name="com.dogactanriverdi.e_commerceapp.presentation.seeall.SeeAllFragment"
+        android:label="@string/see_all"
+        tools:layout="@layout/fragment_see_all">
+        <argument
+            android:name="state"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="com.dogactanriverdi.e_commerceapp.presentation.categories.CategoriesFragment"
+        android:label="@string/categories"
+        tools:layout="@layout/fragment_categories" >
+        <argument
+            android:name="categoryName"
+            app:argType="string" />
+    </fragment>
 </navigation>

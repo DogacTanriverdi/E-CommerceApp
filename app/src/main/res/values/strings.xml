@@ -14,4 +14,10 @@
     <string name="successfully_signed_in">Successfully signed in</string>
     <string name="successfully_signed_up">Successfully signed up</string>
     <string name="name">Name</string>
+    <string name="products">Products</string>
+    <string name="see_all">See all</string>
+    <string name="on_sale">On sale</string>
+    <string name="categories">Categories</string>
+    <string name="product_image">Product image</string>
+    <string name="category_image">Category image</string>
 </resources>
