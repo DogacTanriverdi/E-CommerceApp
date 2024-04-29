@@ -61,10 +61,20 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun setupProductAdapter() {
         binding.rvProducts.adapter = productAdapter
+
+        productAdapter.setOnItemClickListener { product ->
+            val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(product.id)
+            findNavController().navigate(action)
+        }
     }
 
     private fun setupOnSaleAdapter() {
         binding.rvOnSaleProducts.adapter = onSaleAdapter
+
+        onSaleAdapter.setOnItemClickListener { product ->
+            val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(product.id)
+            findNavController().navigate(action)
+        }
     }
 
     private fun setupCategoriesAdapter() {

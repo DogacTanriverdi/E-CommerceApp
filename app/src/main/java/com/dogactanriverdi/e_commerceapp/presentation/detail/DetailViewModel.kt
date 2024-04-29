@@ -8,11 +8,13 @@ import com.dogactanriverdi.e_commerceapp.domain.usecase.detail.GetProductDetailU
 import com.dogactanriverdi.e_commerceapp.domain.usecase.favorite.AddToFavoritesUseCase
 import com.dogactanriverdi.e_commerceapp.presentation.detail.state.AddToFavoritesState
 import com.dogactanriverdi.e_commerceapp.presentation.detail.state.DetailState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class DetailViewModel @Inject constructor(
     private val detailUseCase: GetProductDetailUseCase,
     private val addToFavoritesUseCase: AddToFavoritesUseCase
@@ -26,8 +28,8 @@ class DetailViewModel @Inject constructor(
 
     fun getProductDetail(productId: Int) {
         viewModelScope.launch {
-            detailUseCase(productId).collect { products ->
-                when (products) {
+            detailUseCase(productId).collect { detail ->
+                when (detail) {
 
                     is Resource.Loading -> {
                         _detailState.value = detailState.value.copy(
@@ -40,7 +42,7 @@ class DetailViewModel @Inject constructor(
                     is Resource.Success -> {
                         _detailState.value = detailState.value.copy(
                             isLoading = false,
-                            detail = products.data,
+                            detail = detail.data,
                             error = ""
                         )
                     }
@@ -49,7 +51,7 @@ class DetailViewModel @Inject constructor(
                         _detailState.value = detailState.value.copy(
                             isLoading = false,
                             detail = null,
-                            error = products.message ?: "Unknown error!"
+                            error = detail.message ?: "Unknown error!"
                         )
                     }
                 }
