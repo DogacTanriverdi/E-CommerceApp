@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.dogactanriverdi.e_commerceapp.R
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
@@ -37,6 +38,12 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories) {
 
     private fun setupCategoriesAdapter() {
         binding.rvCategories.adapter = categoriesAdapter
+
+        categoriesAdapter.setOnItemClickListener { product ->
+            val action =
+                CategoriesFragmentDirections.actionCategoriesFragmentToDetailFragment(product.id)
+            findNavController().navigate(action)
+        }
     }
 
     private fun observeProducts(productsState: StateFlow<ProductsState>) {

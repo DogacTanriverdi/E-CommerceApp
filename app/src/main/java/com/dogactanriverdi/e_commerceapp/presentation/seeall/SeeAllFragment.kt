@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.dogactanriverdi.e_commerceapp.R
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
@@ -43,6 +44,11 @@ class SeeAllFragment : Fragment(R.layout.fragment_see_all) {
 
     private fun setupSeeAllAdapter() {
         binding.rvSeeAll.adapter = seeAllAdapter
+
+        seeAllAdapter.setOnItemClickListener { product ->
+            val action = SeeAllFragmentDirections.actionSeeAllFragmentToDetailFragment(product.id)
+            findNavController().navigate(action)
+        }
     }
 
     private fun observeProducts(productsState: StateFlow<ProductsState>) {
