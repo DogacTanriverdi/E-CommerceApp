@@ -5,11 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.dogactanriverdi.e_commerceapp.common.Resource
 import com.dogactanriverdi.e_commerceapp.domain.usecase.product.SearchProductUseCase
 import com.dogactanriverdi.e_commerceapp.presentation.search.state.SearchState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class SearchViewModel @Inject constructor(
     private val useCase: SearchProductUseCase
 ) : ViewModel() {
@@ -17,7 +19,7 @@ class SearchViewModel @Inject constructor(
     private val _state = MutableStateFlow(SearchState())
     val state: StateFlow<SearchState> = _state
 
-    private fun searchProduct(searchQuery: String) {
+    fun searchProduct(searchQuery: String) {
         viewModelScope.launch {
             useCase(searchQuery).collect { products ->
                 when (products) {
