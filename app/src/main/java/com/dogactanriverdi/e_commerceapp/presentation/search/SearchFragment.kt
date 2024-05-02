@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.dogactanriverdi.e_commerceapp.R
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
 import com.dogactanriverdi.e_commerceapp.databinding.FragmentSearchBinding
@@ -60,7 +61,9 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         binding.rvSearch.adapter = searchAdapter
 
         searchAdapter.setOnItemClickListener { product ->
-            val action = SearchFragmentDirections.actionSearchFragmentToDetailFragment(product.id)
+            val action = SearchFragmentDirections.actionSearchFragmentToDetailFragment(
+                product.id
+            )
             findNavController().navigate(action)
         }
     }

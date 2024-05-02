@@ -29,7 +29,7 @@ class SignInViewModel @Inject constructor(
                         _state.value = state.value.copy(
                             isLoading = true,
                             signIn = null,
-                            error = ""
+                            error = "",
                         )
                     }
 
@@ -37,7 +37,7 @@ class SignInViewModel @Inject constructor(
                         _state.value = state.value.copy(
                             isLoading = false,
                             signIn = authResponse.data,
-                            error = ""
+                            error = "",
                         )
                     }
 
@@ -45,7 +45,7 @@ class SignInViewModel @Inject constructor(
                         _state.value = state.value.copy(
                             isLoading = false,
                             signIn = null,
-                            error = authResponse.message ?: "Unknown error!"
+                            error = authResponse.message ?: "Unknown error!",
                         )
                     }
                 }

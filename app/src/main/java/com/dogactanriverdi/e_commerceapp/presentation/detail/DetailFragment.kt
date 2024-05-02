@@ -1,6 +1,7 @@
 package com.dogactanriverdi.e_commerceapp.presentation.detail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -8,12 +9,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.dogactanriverdi.e_commerceapp.R
+import com.dogactanriverdi.e_commerceapp.common.Constants.DATASTORE_USER_ID_KEY
 import com.dogactanriverdi.e_commerceapp.common.loadImage
+import com.dogactanriverdi.e_commerceapp.common.readUserId
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
 import com.dogactanriverdi.e_commerceapp.databinding.FragmentDetailBinding
+import com.dogactanriverdi.e_commerceapp.domain.model.favorite.AddToFavoritesBody
+import com.dogactanriverdi.e_commerceapp.presentation.detail.state.AddToFavoritesState
 import com.dogactanriverdi.e_commerceapp.presentation.detail.state.DetailState
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -29,10 +36,35 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         super.onViewCreated(view, savedInstanceState)
 
         val detailState = viewModel.detailState
+        val addToFavoritesState = viewModel.addToFavoritesState
+
+
+
+        with(binding) {
+
+            ibBack.setOnClickListener {
+                findNavController().navigateUp()
+            }
+
+            lifecycleScope.launch {
+                val userId = readUserId(requireContext(), DATASTORE_USER_ID_KEY)
+                userId?.let {
+                    ibAddFavorite.setOnClickListener {
+                        viewModel.addToFavorites(
+                            AddToFavoritesBody(
+                                args.productId,
+                                userId
+                            )
+                        )
+                    }
+                }
+            }
+        }
 
         viewModel.getProductDetail(args.productId)
 
         observeProductDetail(detailState)
+        observeAddToFavorites(addToFavoritesState)
     }
 
     private fun observeProductDetail(detailState: StateFlow<DetailState>) {
@@ -45,6 +77,8 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     if (state.isLoading) {
                         tvError.visibility = View.GONE
                         nestedScrollView.visibility = View.GONE
+                        ibBack.visibility = View.GONE
+                        ibAddFavorite.visibility = View.GONE
                         bottomLayout.visibility = View.GONE
                         progressBar.visibility = View.VISIBLE
                     }
@@ -52,6 +86,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     if (state.error.isNotBlank()) {
                         tvError.visibility = View.VISIBLE
                         tvError.text = state.error
+                        ibBack.visibility = View.VISIBLE
                         nestedScrollView.visibility = View.GONE
                         bottomLayout.visibility = View.GONE
                         progressBar.visibility = View.GONE
@@ -62,6 +97,8 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                         progressBar.visibility = View.GONE
                         nestedScrollView.visibility = View.VISIBLE
                         bottomLayout.visibility = View.VISIBLE
+                        ibBack.visibility = View.VISIBLE
+                        ibAddFavorite.visibility = View.VISIBLE
 
                         detail.product.let { product ->
                             ivProductImage.loadImage(product.imageOne)
@@ -81,6 +118,36 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                                 findNavController().navigate(action)
                             }
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeAddToFavorites(addToFavoritesState: StateFlow<AddToFavoritesState>) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            with(binding) {
+                addToFavoritesState.collect { state ->
+
+                    if (state.isLoading) {
+                        ibAddFavorite.visibility = View.GONE
+                        pbFavorites.visibility = View.VISIBLE
+                    }
+
+                    if (state.error.isNotBlank()) {
+                        ibAddFavorite.visibility = View.VISIBLE
+                        pbFavorites.visibility = View.GONE
+                        val snackbar =
+                            Snackbar.make(requireView(), state.error, Snackbar.LENGTH_SHORT)
+                        snackbar.show()
+                    }
+
+                    state.addToFavorites?.let { response ->
+                        ibAddFavorite.visibility = View.VISIBLE
+                        pbFavorites.visibility = View.GONE
+                        val snackbar =
+                            Snackbar.make(requireView(), response.message, Snackbar.LENGTH_SHORT)
+                        snackbar.show()
                     }
                 }
             }

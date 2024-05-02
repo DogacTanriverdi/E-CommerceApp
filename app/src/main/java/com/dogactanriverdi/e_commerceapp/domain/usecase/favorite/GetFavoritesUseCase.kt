@@ -11,11 +11,11 @@ import javax.inject.Inject
 class GetFavoritesUseCase @Inject constructor(
     private val repo: FavoriteRepository
 ) {
-    operator fun invoke(): Flow<Resource<Products>> {
+    operator fun invoke(userId: String): Flow<Resource<Products>> {
         return flow {
             try {
                 emit(Resource.Loading())
-                val getFavorites = repo.getFavorites()
+                val getFavorites = repo.getFavorites(userId)
                 getFavorites.status?.let { status ->
                     if (status == 400) {
                         emit(Resource.Error(message = getFavorites.message ?: "Unknown error!"))

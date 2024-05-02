@@ -22,4 +22,9 @@
     <string name="category_image">Category image</string>
     <string name="in_stock">"In stock: "</string>
     <string name="search_products">Search products…</string>
+    <string name="back_button">Back button</string>
+    <string name="add_to_favorites_button">Add to favorites button</string>
+    <string name="delete_from_favorites_button">Delete from favorites button</string>
+    <string name="product_successfully_deleted">Product successfully deleted</string>
+    <string name="undo">Undo</string>
 </resources>

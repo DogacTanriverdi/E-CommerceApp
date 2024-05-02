@@ -46,7 +46,9 @@ class SeeAllFragment : Fragment(R.layout.fragment_see_all) {
         binding.rvSeeAll.adapter = seeAllAdapter
 
         seeAllAdapter.setOnItemClickListener { product ->
-            val action = SeeAllFragmentDirections.actionSeeAllFragmentToDetailFragment(product.id)
+            val action = SeeAllFragmentDirections.actionSeeAllFragmentToDetailFragment(
+                product.id
+            )
             findNavController().navigate(action)
         }
     }

@@ -41,7 +41,9 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories) {
 
         categoriesAdapter.setOnItemClickListener { product ->
             val action =
-                CategoriesFragmentDirections.actionCategoriesFragmentToDetailFragment(product.id)
+                CategoriesFragmentDirections.actionCategoriesFragmentToDetailFragment(
+                    product.id
+                )
             findNavController().navigate(action)
         }
     }

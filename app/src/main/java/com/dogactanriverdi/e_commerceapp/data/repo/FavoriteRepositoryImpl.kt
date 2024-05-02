@@ -18,8 +18,8 @@ class FavoriteRepositoryImpl @Inject constructor(
         return service.addToFavorites(addToFavoritesBody = addToFavoritesBody)
     }
 
-    override suspend fun getFavorites(): ProductsDto {
-        return service.getFavorites()
+    override suspend fun getFavorites(userId: String): ProductsDto {
+        return service.getFavorites(userId = userId)
     }
 
     override suspend fun getFavoriteCount(): FavoriteCountResponseDto {

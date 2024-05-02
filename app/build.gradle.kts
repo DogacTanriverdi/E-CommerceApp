@@ -83,4 +83,7 @@ dependencies {
 
     // Shimmer
     implementation(libs.shimmer)
+
+    // Datastore
+    implementation(libs.datastore)
 }

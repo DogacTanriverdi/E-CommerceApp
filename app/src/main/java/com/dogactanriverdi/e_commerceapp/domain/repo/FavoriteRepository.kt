@@ -11,7 +11,7 @@ interface FavoriteRepository {
 
     suspend fun addToFavorites(addToFavoritesBody: AddToFavoritesBody): FavoriteResponseDto
 
-    suspend fun getFavorites(): ProductsDto
+    suspend fun getFavorites(userId: String): ProductsDto
 
     suspend fun getFavoriteCount(): FavoriteCountResponseDto
 

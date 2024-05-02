@@ -2,6 +2,11 @@ package com.dogactanriverdi.e_commerceapp.common
 
 object Constants {
 
+    /*** Data Store ****/
+
+    const val DATASTORE_NAME = "user"
+    const val DATASTORE_USER_ID_KEY = "userId"
+
     /*** Service ***/
 
     // Base

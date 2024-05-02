@@ -8,6 +8,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dogactanriverdi.e_commerceapp.R
+import com.dogactanriverdi.e_commerceapp.common.Constants.DATASTORE_USER_ID_KEY
+import com.dogactanriverdi.e_commerceapp.common.readUserId
+import com.dogactanriverdi.e_commerceapp.common.saveUserId
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
 import com.dogactanriverdi.e_commerceapp.databinding.FragmentSignInBinding
 import com.dogactanriverdi.e_commerceapp.domain.model.auth.SignInBody
@@ -20,6 +23,21 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
     private val binding by viewBinding(FragmentSignInBinding::bind)
 
     private val viewModel: SignInViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            val userId = readUserId(requireContext(), DATASTORE_USER_ID_KEY)
+            userId?.let {
+                if (it != "") {
+                    val action =
+                        SignInFragmentDirections.actionSignInFragmentToHomeFragment()
+                    findNavController().navigate(action)
+                }
+            }
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -54,9 +72,9 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
                             progressBar.visibility = View.GONE
 
                             if (signIn.status == 200) {
+                                saveUserId(requireContext(), DATASTORE_USER_ID_KEY, signIn.userId)
                                 val action =
                                     SignInFragmentDirections.actionSignInFragmentToHomeFragment()
-
                                 findNavController().navigate(action)
 
                                 Toast.makeText(

@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavGraphNavigator
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.dogactanriverdi.e_commerceapp.R
@@ -29,7 +31,6 @@ class MainActivity : AppCompatActivity() {
         )
 
         navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
-
             when (destination.id) {
                 R.id.signInFragment,
                 R.id.signUpFragment,
@@ -37,7 +38,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.detailFragment -> {
                     binding.bottomNavView.visibility = View.GONE
                 }
-
                 else -> {
                     binding.bottomNavView.visibility = View.VISIBLE
                 }

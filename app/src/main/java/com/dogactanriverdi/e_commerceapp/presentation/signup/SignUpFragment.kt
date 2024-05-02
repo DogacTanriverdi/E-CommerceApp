@@ -64,7 +64,6 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
                             if (signUp.status == 200) {
                                 val action =
                                     SignUpFragmentDirections.actionSignUpFragmentToHomeFragment()
-
                                 findNavController().navigate(action)
 
                                 Toast.makeText(

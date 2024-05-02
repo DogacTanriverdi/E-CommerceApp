@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.dogactanriverdi.e_commerceapp.R
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
 import com.dogactanriverdi.e_commerceapp.databinding.FragmentHomeBinding
@@ -40,12 +41,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         with(binding) {
 
             tvSeeAllProducts.setOnClickListener {
-                val action = HomeFragmentDirections.actionHomeFragmentToSeeAllFragment(0)
+                val action =
+                    HomeFragmentDirections.actionHomeFragmentToSeeAllFragment(0)
                 findNavController().navigate(action)
             }
 
             tvSeeAllOnSale.setOnClickListener {
-                val action = HomeFragmentDirections.actionHomeFragmentToSeeAllFragment(1)
+                val action =
+                    HomeFragmentDirections.actionHomeFragmentToSeeAllFragment(1)
                 findNavController().navigate(action)
             }
         }
@@ -63,7 +66,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.rvProducts.adapter = productAdapter
 
         productAdapter.setOnItemClickListener { product ->
-            val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(product.id)
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToDetailFragment(product.id)
             findNavController().navigate(action)
         }
     }
@@ -72,7 +76,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.rvOnSaleProducts.adapter = onSaleAdapter
 
         onSaleAdapter.setOnItemClickListener { product ->
-            val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(product.id)
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToDetailFragment(product.id)
             findNavController().navigate(action)
         }
     }
@@ -81,7 +86,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.rvCategories.adapter = categoriesAdapter
 
         categoriesAdapter.setOnItemClickListener { category ->
-            val action = HomeFragmentDirections.actionHomeFragmentToCategoriesFragment(category.name)
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToCategoriesFragment(
+                    category.name
+                )
             findNavController().navigate(action)
         }
     }

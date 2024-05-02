@@ -16,11 +16,13 @@ import com.dogactanriverdi.e_commerceapp.presentation.favorites.state.ClearFavor
 import com.dogactanriverdi.e_commerceapp.presentation.favorites.state.DeleteFromFavoritesState
 import com.dogactanriverdi.e_commerceapp.presentation.favorites.state.FavoriteCountState
 import com.dogactanriverdi.e_commerceapp.presentation.favorites.state.FavoritesState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class FavoritesViewModel @Inject constructor(
     private val addToFavoritesUseCase: AddToFavoritesUseCase,
     private val deleteFromFavoritesUseCase: DeleteFromFavoritesUseCase,
@@ -43,11 +45,6 @@ class FavoritesViewModel @Inject constructor(
 
     private val _favoritesState = MutableStateFlow(FavoritesState())
     val favoritesState: StateFlow<FavoritesState> = _favoritesState
-
-    init {
-        favorites()
-        favoriteCount()
-    }
 
     fun addToFavorites(addToFavoritesBody: AddToFavoritesBody) {
         viewModelScope.launch {
@@ -181,9 +178,9 @@ class FavoritesViewModel @Inject constructor(
         }
     }
 
-    fun favorites() {
+    fun getFavorites(userId: String) {
         viewModelScope.launch {
-            favoritesUseCase().collect { products ->
+            favoritesUseCase(userId).collect { products ->
                 when (products) {
 
                     is Resource.Loading -> {

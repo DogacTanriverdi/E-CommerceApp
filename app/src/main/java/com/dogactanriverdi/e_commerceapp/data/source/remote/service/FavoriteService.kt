@@ -17,6 +17,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface FavoriteService {
 
@@ -28,7 +29,8 @@ interface FavoriteService {
 
     @GET(GET_FAVORITES)
     suspend fun getFavorites(
-        @Header(STORE) store: String = STORE_NAME
+        @Header(STORE) store: String = STORE_NAME,
+        @Query("userId") userId: String
     ): ProductsDto
 
     @GET(GET_FAVORITE_COUNT)
