@@ -69,5 +69,5 @@ object Constants {
     const val CHANGE_PASSWORD = "change_password"
 
     // Queries
-    const val USER_ID = "user_id"
+    const val USER_ID = "userId"
 }

@@ -27,4 +27,11 @@
     <string name="delete_from_favorites_button">Delete from favorites button</string>
     <string name="product_successfully_deleted">Product successfully deleted</string>
     <string name="undo">Undo</string>
+    <string name="phone">Phone</string>
+    <string name="address">Address</string>
+    <string name="save">Save</string>
+    <string name="new_password">New password</string>
+    <string name="verify_password">Verify password</string>
+    <string name="change_password">Change Password</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
 </resources>

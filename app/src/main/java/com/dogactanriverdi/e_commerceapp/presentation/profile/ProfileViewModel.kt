@@ -11,11 +11,13 @@ import com.dogactanriverdi.e_commerceapp.domain.usecase.user.GetUserUseCase
 import com.dogactanriverdi.e_commerceapp.presentation.profile.state.ChangePasswordState
 import com.dogactanriverdi.e_commerceapp.presentation.profile.state.EditProfileState
 import com.dogactanriverdi.e_commerceapp.presentation.profile.state.UserState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val userUseCase: GetUserUseCase,
     private val editProfileUseCase: EditProfileUseCase,
