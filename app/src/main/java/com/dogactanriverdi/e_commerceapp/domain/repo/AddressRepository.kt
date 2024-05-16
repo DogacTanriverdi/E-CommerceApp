@@ -9,7 +9,7 @@ interface AddressRepository {
 
     suspend fun addAddress(addAddressBody: AddAddressBody): AddressResponseDto
 
-    suspend fun getAddresses(): AddressResponseDto
+    suspend fun getAddresses(userId: String): AddressResponseDto
 
     suspend fun deleteFromAddresses(deleteFromAddressesBody: DeleteFromAddressesBody): AddressResponseDto
 

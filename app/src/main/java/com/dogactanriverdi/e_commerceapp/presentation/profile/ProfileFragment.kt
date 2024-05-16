@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.dogactanriverdi.e_commerceapp.R
 import com.dogactanriverdi.e_commerceapp.common.Constants.DATASTORE_USER_ID_KEY
 import com.dogactanriverdi.e_commerceapp.common.readUserId
@@ -64,6 +65,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                         } else {
                             tilVerifyPassword.error = getString(R.string.passwords_do_not_match)
                         }
+                    }
+
+                    btnGoToAddresses.setOnClickListener {
+                        val action =
+                            ProfileFragmentDirections.actionProfileFragmentToAddressesFragment()
+                        findNavController().navigate(action)
                     }
                 }
             }

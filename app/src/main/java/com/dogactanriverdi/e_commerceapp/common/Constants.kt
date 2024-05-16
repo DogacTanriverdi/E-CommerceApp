@@ -16,6 +16,7 @@ object Constants {
     // Auth
     const val SIGN_IN = "sign_in"
     const val SIGN_UP = "sign_up"
+    const val USER_ID = "userId"
 
     // Products
     // Endpoints
@@ -35,9 +36,6 @@ object Constants {
     const val ADD_TO_CART = "add_to_cart"
     const val DELETE_FROM_CART = "delete_from_cart"
     const val CLEAR_CART = "clear_cart"
-
-    // Queries
-    const val CART_USER_ID = "userId"
 
     // Categories
     const val GET_CATEGORIES = "get_categories"
@@ -67,7 +65,4 @@ object Constants {
     const val GET_USER = "get_user"
     const val EDIT_PROFILE = "edit_profile"
     const val CHANGE_PASSWORD = "change_password"
-
-    // Queries
-    const val USER_ID = "userId"
 }

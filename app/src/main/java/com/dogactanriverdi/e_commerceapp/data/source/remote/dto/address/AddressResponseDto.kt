@@ -6,8 +6,8 @@ import com.google.gson.annotations.SerializedName
 data class AddressResponseDto(
     @SerializedName("message")
     val message: String?,
-    @SerializedName("products")
-    val products: List<Address>?,
+    @SerializedName("addresses")
+    val addresses: List<Address>?,
     @SerializedName("status")
     val status: Int?
 )

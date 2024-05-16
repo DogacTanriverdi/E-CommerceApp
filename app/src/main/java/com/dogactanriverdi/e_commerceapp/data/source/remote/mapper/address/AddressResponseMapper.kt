@@ -6,19 +6,19 @@ import com.dogactanriverdi.e_commerceapp.domain.model.address.AddressResponse
 
 fun AddressResponseDto.toAddressResponse(): AddressResponse {
 
-    val address = products?.let { products ->
-        products.map { product ->
+    val address = addresses?.let { addresses ->
+        addresses.map { address ->
             Address(
-                address = product.address,
-                id = product.id,
-                title = product.title
+                address = address.address,
+                id = address.id,
+                title = address.title
             )
         }
     }
 
     return AddressResponse(
         message = message ?: "",
-        products = address ?: emptyList(),
+        addresses = address ?: emptyList(),
         status = status ?: -1
     )
 }

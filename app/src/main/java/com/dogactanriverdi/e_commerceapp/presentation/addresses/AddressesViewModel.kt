@@ -14,11 +14,13 @@ import com.dogactanriverdi.e_commerceapp.presentation.addresses.state.AddAddress
 import com.dogactanriverdi.e_commerceapp.presentation.addresses.state.AddressesState
 import com.dogactanriverdi.e_commerceapp.presentation.addresses.state.ClearAddressesState
 import com.dogactanriverdi.e_commerceapp.presentation.addresses.state.DeleteFromAddressesState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class AddressesViewModel @Inject constructor(
     private val addressesUseCase: GetAddressesUseCase,
     private val addAddressUseCase: AddAddressUseCase,
@@ -38,13 +40,9 @@ class AddressesViewModel @Inject constructor(
     private val _clearAddressesState = MutableStateFlow(ClearAddressesState())
     val clearAddressesState: StateFlow<ClearAddressesState> = _clearAddressesState
 
-    init {
-        getAddresses()
-    }
-
-    private fun getAddresses() {
+    fun getAddresses(userId: String) {
         viewModelScope.launch {
-            addressesUseCase().collect { addresses ->
+            addressesUseCase(userId).collect { addresses ->
                 when (addresses) {
 
                     is Resource.Loading -> {

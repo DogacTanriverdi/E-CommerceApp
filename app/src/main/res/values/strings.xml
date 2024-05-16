@@ -34,4 +34,11 @@
     <string name="verify_password">Verify password</string>
     <string name="change_password">Change Password</string>
     <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="addresses">Addresses</string>
+    <string name="go_to_addresses">Go to addresses</string>
+    <string name="add_address">Add Address</string>
+    <string name="address_title">Address Title</string>
+    <string name="address_description">Address Description</string>
+    <string name="clear_all_favorites">Clear all favorites</string>
+    <string name="unknown_error">Unknown error!</string>
 </resources>

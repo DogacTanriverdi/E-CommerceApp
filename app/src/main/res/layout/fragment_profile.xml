@@ -179,6 +179,15 @@
                 android:text="@string/change_password"
                 android:textSize="20sp" />
 
+            <Button
+                android:id="@+id/btnGoToAddresses"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/go_to_addresses"
+                android:layout_margin="10dp"
+                android:layout_gravity="end"
+                />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

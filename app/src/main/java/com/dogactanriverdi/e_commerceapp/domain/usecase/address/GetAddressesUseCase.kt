@@ -11,13 +11,13 @@ import javax.inject.Inject
 class GetAddressesUseCase @Inject constructor(
     private val repo: AddressRepository
 ) {
-    operator fun invoke(): Flow<Resource<AddressResponse>> {
+    operator fun invoke(userId: String): Flow<Resource<AddressResponse>> {
         return flow {
             try {
                 emit(Resource.Loading())
-                val getAddresses = repo.getAddresses()
+                val getAddresses = repo.getAddresses(userId)
                 getAddresses.status?.let { status ->
-                    if (getAddresses.status == 400) {
+                    if (status == 400) {
                         emit(Resource.Error(message = getAddresses.message ?: "Unknown error!"))
                     }
                     emit(Resource.Success(data = getAddresses.toAddressResponse()))

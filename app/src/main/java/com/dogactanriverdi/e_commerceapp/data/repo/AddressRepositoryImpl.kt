@@ -16,8 +16,8 @@ class AddressRepositoryImpl @Inject constructor(
         return service.addAddress(addAddressBody = addAddressBody)
     }
 
-    override suspend fun getAddresses(): AddressResponseDto {
-        return service.getAddresses()
+    override suspend fun getAddresses(userId: String): AddressResponseDto {
+        return service.getAddresses(userId = userId)
     }
 
     override suspend fun deleteFromAddresses(deleteFromAddressesBody: DeleteFromAddressesBody): AddressResponseDto {

@@ -35,7 +35,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.signInFragment,
                 R.id.signUpFragment,
                 R.id.cartFragment,
-                R.id.detailFragment -> {
+                R.id.detailFragment,
+                R.id.addressesFragment-> {
                     binding.bottomNavView.visibility = View.GONE
                 }
                 else -> {
