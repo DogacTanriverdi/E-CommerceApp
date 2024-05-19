@@ -31,15 +31,15 @@ class SeeAllFragment : Fragment(R.layout.fragment_see_all) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (args.state == 0) {
-            viewModel.getProducts()
-            observeProducts(viewModel.productsState)
-        } else if (args.state == 1) {
-            viewModel.getSaleProducts()
-            observeOnSaleProducts(viewModel.saleProductsState)
-        }
-
         setupSeeAllAdapter()
+
+        if (!args.saleState) {
+            viewModel.getProducts()
+            observeProductsState(viewModel.productsState)
+        } else {
+            viewModel.getSaleProducts()
+            observeOnSaleProductsState(viewModel.saleProductsState)
+        }
     }
 
     private fun setupSeeAllAdapter() {
@@ -53,12 +53,10 @@ class SeeAllFragment : Fragment(R.layout.fragment_see_all) {
         }
     }
 
-    private fun observeProducts(productsState: StateFlow<ProductsState>) {
+    private fun observeProductsState(productsState: StateFlow<ProductsState>) {
         viewLifecycleOwner.lifecycleScope.launch {
-
-            with(binding) {
-
-                productsState.collect { state ->
+            productsState.collect { state ->
+                with(binding) {
 
                     if (state.isLoading) {
                         tvError.visibility = View.GONE
@@ -84,12 +82,10 @@ class SeeAllFragment : Fragment(R.layout.fragment_see_all) {
         }
     }
 
-    private fun observeOnSaleProducts(saleState: StateFlow<SaleProductsState>) {
+    private fun observeOnSaleProductsState(saleState: StateFlow<SaleProductsState>) {
         viewLifecycleOwner.lifecycleScope.launch {
-
-            with(binding) {
-
-                saleState.collect { state ->
+            saleState.collect { state ->
+                with(binding) {
 
                     if (state.isLoading) {
                         tvError.visibility = View.GONE
