@@ -14,7 +14,9 @@ import com.dogactanriverdi.e_commerceapp.common.saveUserId
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
 import com.dogactanriverdi.e_commerceapp.databinding.FragmentSignInBinding
 import com.dogactanriverdi.e_commerceapp.domain.model.auth.SignInBody
+import com.dogactanriverdi.e_commerceapp.presentation.signin.state.SignInState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -30,7 +32,7 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
         lifecycleScope.launch {
             val userId = readUserId(requireContext(), DATASTORE_USER_ID_KEY)
             userId?.let {
-                if (it != "") {
+                userId.isNotBlank().let {
                     val action =
                         SignInFragmentDirections.actionSignInFragmentToHomeFragment()
                     findNavController().navigate(action)
@@ -42,7 +44,7 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val state = viewModel.state
+        val signInState = viewModel.signInState
 
         with(binding) {
 
@@ -53,44 +55,52 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
                 viewModel.signIn(
                     SignInBody(email, password)
                 )
-
-                viewLifecycleOwner.lifecycleScope.launch {
-                    state.collect { state ->
-
-                        if (state.isLoading) {
-                            progressBar.visibility = View.VISIBLE
-                            tvError.visibility = View.GONE
-                        }
-
-                        if (state.error.isNotBlank()) {
-                            progressBar.visibility = View.GONE
-                            tvError.visibility = View.VISIBLE
-                            tvError.text = state.error
-                        }
-
-                        state.signIn?.let { signIn ->
-                            progressBar.visibility = View.GONE
-
-                            if (signIn.status == 200) {
-                                saveUserId(requireContext(), DATASTORE_USER_ID_KEY, signIn.userId)
-                                val action =
-                                    SignInFragmentDirections.actionSignInFragmentToHomeFragment()
-                                findNavController().navigate(action)
-
-                                Toast.makeText(
-                                    requireContext(),
-                                    R.string.successfully_signed_in,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-                    }
-                }
             }
 
             tvDontHaveAnAccount.setOnClickListener {
                 val action = SignInFragmentDirections.actionSignInFragmentToSignUpFragment()
                 findNavController().navigate(action)
+            }
+        }
+
+        observeSignInState(signInState)
+    }
+
+    private fun observeSignInState(state: StateFlow<SignInState>) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            state.collect { state ->
+                with(binding) {
+
+                    if (state.isLoading) {
+                        progressBar.visibility = View.VISIBLE
+                        tvError.visibility = View.GONE
+                    }
+
+                    if (state.error.isNotBlank()) {
+                        progressBar.visibility = View.GONE
+                        tvError.visibility = View.VISIBLE
+                        tvError.text = state.error
+                    }
+
+                    state.signIn?.let { signIn ->
+                        progressBar.visibility = View.GONE
+
+                        if (signIn.status == 200) {
+
+                            saveUserId(requireContext(), DATASTORE_USER_ID_KEY, signIn.userId)
+
+                            val action =
+                                SignInFragmentDirections.actionSignInFragmentToHomeFragment()
+                            findNavController().navigate(action)
+
+                            Toast.makeText(
+                                requireContext(),
+                                R.string.successfully_signed_in,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
             }
         }
     }

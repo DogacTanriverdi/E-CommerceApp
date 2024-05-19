@@ -17,16 +17,16 @@ class SignInViewModel @Inject constructor(
     private val useCase: SignInUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(SignInState())
-    val state: StateFlow<SignInState> = _state
+    private val _signInState = MutableStateFlow(SignInState())
+    val signInState: StateFlow<SignInState> = _signInState
 
     fun signIn(signInBody: SignInBody) {
         viewModelScope.launch {
-            useCase(signInBody).collect { authResponse ->
-                when (authResponse) {
+            useCase(signInBody).collect { response ->
+                when (response) {
 
                     is Resource.Loading -> {
-                        _state.value = state.value.copy(
+                        _signInState.value = signInState.value.copy(
                             isLoading = true,
                             signIn = null,
                             error = "",
@@ -34,18 +34,18 @@ class SignInViewModel @Inject constructor(
                     }
 
                     is Resource.Success -> {
-                        _state.value = state.value.copy(
+                        _signInState.value = signInState.value.copy(
                             isLoading = false,
-                            signIn = authResponse.data,
+                            signIn = response.data,
                             error = "",
                         )
                     }
 
                     is Resource.Error -> {
-                        _state.value = state.value.copy(
+                        _signInState.value = signInState.value.copy(
                             isLoading = false,
                             signIn = null,
-                            error = authResponse.message ?: "Unknown error!",
+                            error = response.message ?: "Unknown error!",
                         )
                     }
                 }
