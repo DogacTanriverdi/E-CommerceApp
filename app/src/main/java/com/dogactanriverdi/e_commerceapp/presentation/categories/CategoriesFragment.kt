@@ -33,7 +33,8 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories) {
         viewModel.getProductsByCategory(args.categoryName)
 
         setupCategoriesAdapter()
-        observeProducts(viewModel.state)
+
+        observeProductsState(viewModel.productsState)
     }
 
     private fun setupCategoriesAdapter() {
@@ -48,12 +49,10 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories) {
         }
     }
 
-    private fun observeProducts(productsState: StateFlow<ProductsState>) {
+    private fun observeProductsState(productsState: StateFlow<ProductsState>) {
         viewLifecycleOwner.lifecycleScope.launch {
-
-            with(binding) {
-
-                productsState.collect { state ->
+            productsState.collect { state ->
+                with(binding) {
 
                     if (state.isLoading) {
                         tvError.visibility = View.GONE

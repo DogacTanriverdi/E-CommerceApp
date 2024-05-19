@@ -16,8 +16,8 @@ class CategoriesViewModel @Inject constructor(
     private val useCase: GetProductsByCategoryUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(ProductsState())
-    val state: StateFlow<ProductsState> = _state
+    private val _productsState = MutableStateFlow(ProductsState())
+    val productsState: StateFlow<ProductsState> = _productsState
 
     fun getProductsByCategory(category: String) {
         viewModelScope.launch {
@@ -25,7 +25,7 @@ class CategoriesViewModel @Inject constructor(
                 when (products) {
 
                     is Resource.Loading -> {
-                        _state.value = state.value.copy(
+                        _productsState.value = productsState.value.copy(
                             isLoading = true,
                             products = null,
                             error = ""
@@ -33,7 +33,7 @@ class CategoriesViewModel @Inject constructor(
                     }
 
                     is Resource.Success -> {
-                        _state.value = state.value.copy(
+                        _productsState.value = productsState.value.copy(
                             isLoading = false,
                             products = products.data,
                             error = ""
@@ -41,7 +41,7 @@ class CategoriesViewModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
-                        _state.value = state.value.copy(
+                        _productsState.value = productsState.value.copy(
                             isLoading = false,
                             products = null,
                             error = products.message ?: "Unknown error!"

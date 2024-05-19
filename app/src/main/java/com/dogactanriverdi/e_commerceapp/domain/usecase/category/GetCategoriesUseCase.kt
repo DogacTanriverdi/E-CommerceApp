@@ -17,7 +17,7 @@ class GetCategoriesUseCase @Inject constructor(
                 emit(Resource.Loading())
                 val getCategories = repo.getCategories()
                 getCategories.status?.let { status ->
-                    if (getCategories.status == 400) {
+                    if (status == 400) {
                         emit(Resource.Error(message = getCategories.message ?: "Unknown error!"))
                     }
                     emit(Resource.Success(data = getCategories.toCategoriesResponse()))
