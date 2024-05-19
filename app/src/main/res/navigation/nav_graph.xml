@@ -91,6 +91,9 @@
         <action
             android:id="@+id/action_cartFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/action_cartFragment_to_paymentFragment"
+            app:destination="@id/paymentFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
@@ -131,6 +134,11 @@
     <fragment
         android:id="@+id/addAddressFragment"
         android:name="com.dogactanriverdi.e_commerceapp.presentation.addaddress.AddAddressFragment"
-        android:label="fragment_add_address"
+        android:label="@string/add_address"
         tools:layout="@layout/fragment_add_address" />
+    <fragment
+        android:id="@+id/paymentFragment"
+        tools:layout="@layout/fragment_payment"
+        android:name="com.dogactanriverdi.e_commerceapp.presentation.payment.PaymentFragment"
+        android:label="@string/payment" />
 </navigation>

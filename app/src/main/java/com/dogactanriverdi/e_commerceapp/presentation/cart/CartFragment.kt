@@ -58,7 +58,17 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
                     }
 
                     btnGoToPayment.setOnClickListener {
-                        // Navigate to payment fragment
+                        if (cartAdapter.products.isNotEmpty()) {
+                            val action =
+                                CartFragmentDirections.actionCartFragmentToPaymentFragment()
+                            findNavController().navigate(action)
+                        } else {
+                            Snackbar.make(
+                                requireView(),
+                                getString(R.string.you_have_no_products_in_your_cart),
+                                Snackbar.LENGTH_SHORT
+                            ).show()
+                        }
                     }
 
                     ibBack.setOnClickListener {

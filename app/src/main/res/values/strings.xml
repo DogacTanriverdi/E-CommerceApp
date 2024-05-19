@@ -45,4 +45,16 @@
     <string name="go_to_cart">Go to Cart</string>
     <string name="go_to_payment">Go to payment</string>
     <string name="cart">Cart</string>
+    <string name="card_number">Card number</string>
+    <string name="name_on_the_card">Name on the card</string>
+    <string name="expiration_date">Expiration Date</string>
+    <string name="cvc">CVC</string>
+    <string name="complete_payment">Complete payment</string>
+    <string name="payment">Payment</string>
+    <string name="card_number_is_blank_or_incorrect">Card number is blank or incorrect</string>
+    <string name="name_on_the_card_is_blank">Name on the card is blank</string>
+    <string name="expiration_date_is_blank_or_incorrect">Expiration date is blank or incorrect. Please write it like: 0129</string>
+    <string name="cvc_is_blank_or_incorrect_please_write_like_445">CVC is blank or incorrect. Please write like: 445</string>
+    <string name="payment_completed_logo">Payment completed logo</string>
+    <string name="you_have_no_products_in_your_cart">You have no products in your cart</string>
 </resources>
