@@ -41,4 +41,8 @@
     <string name="address_description">Address Description</string>
     <string name="clear_all_favorites">Clear all favorites</string>
     <string name="unknown_error">Unknown error!</string>
+    <string name="cart_button">Cart button</string>
+    <string name="go_to_cart">Go to Cart</string>
+    <string name="go_to_payment">Go to payment</string>
+    <string name="cart">Cart</string>
 </resources>

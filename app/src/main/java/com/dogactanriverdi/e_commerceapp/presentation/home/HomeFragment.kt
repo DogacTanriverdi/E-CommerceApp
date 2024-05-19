@@ -51,6 +51,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     HomeFragmentDirections.actionHomeFragmentToSeeAllFragment(1)
                 findNavController().navigate(action)
             }
+
+            ibCart.setOnClickListener {
+                val action = HomeFragmentDirections.actionHomeFragmentToCartFragment()
+                findNavController().navigate(action)
+            }
         }
 
         observeProducts(productsState)

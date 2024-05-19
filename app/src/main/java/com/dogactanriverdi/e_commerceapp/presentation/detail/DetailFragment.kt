@@ -14,7 +14,9 @@ import com.dogactanriverdi.e_commerceapp.common.loadImage
 import com.dogactanriverdi.e_commerceapp.common.readUserId
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
 import com.dogactanriverdi.e_commerceapp.databinding.FragmentDetailBinding
+import com.dogactanriverdi.e_commerceapp.domain.model.cart.AddToCartBody
 import com.dogactanriverdi.e_commerceapp.domain.model.favorite.AddToFavoritesBody
+import com.dogactanriverdi.e_commerceapp.presentation.detail.state.AddToCartState
 import com.dogactanriverdi.e_commerceapp.presentation.detail.state.AddToFavoritesState
 import com.dogactanriverdi.e_commerceapp.presentation.detail.state.DetailState
 import com.google.android.material.snackbar.Snackbar
@@ -37,8 +39,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         val detailState = viewModel.detailState
         val addToFavoritesState = viewModel.addToFavoritesState
-
-
+        val addToCartState = viewModel.addToCartState
 
         with(binding) {
 
@@ -49,9 +50,19 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             lifecycleScope.launch {
                 val userId = readUserId(requireContext(), DATASTORE_USER_ID_KEY)
                 userId?.let {
+
                     ibAddFavorite.setOnClickListener {
                         viewModel.addToFavorites(
                             AddToFavoritesBody(
+                                args.productId,
+                                userId
+                            )
+                        )
+                    }
+
+                    tvAddToCart.setOnClickListener {
+                        viewModel.addToCart(
+                            AddToCartBody(
                                 args.productId,
                                 userId
                             )
@@ -65,6 +76,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         observeProductDetail(detailState)
         observeAddToFavorites(addToFavoritesState)
+        observeAddToCart(addToCartState)
     }
 
     private fun observeProductDetail(detailState: StateFlow<DetailState>) {
@@ -112,11 +124,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                             }
                             tvInStock.text = "${getString(R.string.in_stock)} ${product.count}"
                             tvRate.text = product.rate.toString()
-                            tvAddToCart.setOnClickListener {
-                                val action =
-                                    DetailFragmentDirections.actionDetailFragmentToCartFragment()
-                                findNavController().navigate(action)
-                            }
                         }
                     }
                 }
@@ -148,6 +155,46 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                         val snackbar =
                             Snackbar.make(requireView(), response.message, Snackbar.LENGTH_SHORT)
                         snackbar.show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeAddToCart(addToCartState: StateFlow<AddToCartState>) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            with(binding) {
+                addToCartState.collect { state ->
+
+                    if (state.isLoading) {
+                        tvAddToCart.visibility = View.GONE
+                        pbAddToCart.visibility = View.VISIBLE
+                    }
+
+                    if (state.error.isNotBlank()) {
+                        tvAddToCart.visibility = View.VISIBLE
+                        pbAddToCart.visibility = View.GONE
+                        Snackbar.make(requireView(), state.error, Snackbar.LENGTH_SHORT).show()
+                    }
+
+                    state.addToCart?.let { response ->
+                        tvAddToCart.visibility = View.VISIBLE
+                        pbAddToCart.visibility = View.GONE
+                        if (response.status == 400) {
+                            Snackbar.make(requireView(), response.message, Snackbar.LENGTH_SHORT)
+                                .show()
+                        } else if (response.status == 200) {
+                            Snackbar.make(
+                                requireView(),
+                                response.message,
+                                Snackbar.LENGTH_LONG
+                            ).setAction(getString(R.string.go_to_cart)) {
+                                val action =
+                                    DetailFragmentDirections.actionDetailFragmentToCartFragment()
+                                findNavController().navigate(action)
+                            }.show()
+
+                        }
                     }
                 }
             }

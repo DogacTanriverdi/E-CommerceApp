@@ -14,11 +14,13 @@ import com.dogactanriverdi.e_commerceapp.presentation.cart.state.AddToCartState
 import com.dogactanriverdi.e_commerceapp.presentation.cart.state.CartProductsState
 import com.dogactanriverdi.e_commerceapp.presentation.cart.state.ClearCartState
 import com.dogactanriverdi.e_commerceapp.presentation.cart.state.DeleteFromCartState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class CartViewModel @Inject constructor(
     private val addToCartUseCase: AddToCartUseCase,
     private val clearCartUseCase: ClearCartUseCase,
