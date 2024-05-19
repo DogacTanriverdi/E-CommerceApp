@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.dogactanriverdi.e_commerceapp.R
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
 import com.dogactanriverdi.e_commerceapp.databinding.FragmentHomeBinding
@@ -42,13 +41,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
             tvSeeAllProducts.setOnClickListener {
                 val action =
-                    HomeFragmentDirections.actionHomeFragmentToSeeAllFragment(0)
+                    HomeFragmentDirections.actionHomeFragmentToSeeAllFragment(saleState = false)
                 findNavController().navigate(action)
             }
 
             tvSeeAllOnSale.setOnClickListener {
                 val action =
-                    HomeFragmentDirections.actionHomeFragmentToSeeAllFragment(1)
+                    HomeFragmentDirections.actionHomeFragmentToSeeAllFragment(saleState = true)
                 findNavController().navigate(action)
             }
 
@@ -58,13 +57,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
 
-        observeProducts(productsState)
-        observeOnSaleProducts(saleProductsState)
-        observeCategories(categoriesState)
-
         setupProductAdapter()
         setupOnSaleAdapter()
         setupCategoriesAdapter()
+
+        observeProductsState(productsState)
+        observeOnSaleProductsState(saleProductsState)
+        observeCategoriesState(categoriesState)
     }
 
     private fun setupProductAdapter() {
@@ -99,12 +98,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun observeProducts(productsState: StateFlow<ProductsState>) {
+    private fun observeProductsState(productsState: StateFlow<ProductsState>) {
         viewLifecycleOwner.lifecycleScope.launch {
-
-            with(binding) {
-
-                productsState.collect { state ->
+            productsState.collect { state ->
+                with(binding) {
 
                     if (state.isLoading) {
                         tvErrorProducts.visibility = View.GONE
@@ -130,12 +127,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun observeOnSaleProducts(saleState: StateFlow<SaleProductsState>) {
+    private fun observeOnSaleProductsState(saleState: StateFlow<SaleProductsState>) {
         viewLifecycleOwner.lifecycleScope.launch {
-
-            with(binding) {
-
-                saleState.collect { state ->
+            saleState.collect { state ->
+                with(binding) {
 
                     if (state.isLoading) {
                         tvErrorOnSale.visibility = View.GONE
@@ -161,12 +156,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun observeCategories(categoriesState: StateFlow<CategoriesState>) {
+    private fun observeCategoriesState(categoriesState: StateFlow<CategoriesState>) {
         viewLifecycleOwner.lifecycleScope.launch {
-
-            with(binding) {
-
-                categoriesState.collect { state ->
+            categoriesState.collect { state ->
+                with(binding) {
 
                     if (state.isLoading) {
                         tvErrorCategories.visibility = View.GONE

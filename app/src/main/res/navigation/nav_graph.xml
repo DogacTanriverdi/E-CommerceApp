@@ -112,12 +112,12 @@
         android:name="com.dogactanriverdi.e_commerceapp.presentation.seeall.SeeAllFragment"
         android:label="@string/see_all"
         tools:layout="@layout/fragment_see_all">
-        <argument
-            android:name="state"
-            app:argType="integer" />
         <action
             android:id="@+id/action_seeAllFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
+        <argument
+            android:name="saleState"
+            app:argType="boolean" />
     </fragment>
     <fragment
         android:id="@+id/categoriesFragment"
