@@ -9,8 +9,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dogactanriverdi.e_commerceapp.R
 import com.dogactanriverdi.e_commerceapp.common.Constants.DATASTORE_USER_ID_KEY
+import com.dogactanriverdi.e_commerceapp.common.gone
 import com.dogactanriverdi.e_commerceapp.common.saveUserId
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
+import com.dogactanriverdi.e_commerceapp.common.visible
 import com.dogactanriverdi.e_commerceapp.databinding.FragmentSignUpBinding
 import com.dogactanriverdi.e_commerceapp.domain.model.auth.SignUpBody
 import com.dogactanriverdi.e_commerceapp.presentation.signup.state.SignUpState
@@ -63,18 +65,18 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
                 with(binding) {
 
                     if (state.isLoading) {
-                        progressBar.visibility = View.VISIBLE
-                        tvError.visibility = View.GONE
+                        progressBar.visible()
+                        tvError.gone()
                     }
 
                     if (state.error.isNotBlank()) {
-                        progressBar.visibility = View.GONE
-                        tvError.visibility = View.VISIBLE
+                        progressBar.gone()
+                        tvError.visible()
                         tvError.text = state.error
                     }
 
                     state.signUp?.let { signUp ->
-                        progressBar.visibility = View.GONE
+                        progressBar.gone()
 
                         if (signUp.status == 200) {
 

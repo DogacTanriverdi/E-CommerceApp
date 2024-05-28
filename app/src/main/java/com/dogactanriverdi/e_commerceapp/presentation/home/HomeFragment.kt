@@ -2,12 +2,16 @@ package com.dogactanriverdi.e_commerceapp.presentation.home
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dogactanriverdi.e_commerceapp.R
+import com.dogactanriverdi.e_commerceapp.common.gone
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
+import com.dogactanriverdi.e_commerceapp.common.visible
 import com.dogactanriverdi.e_commerceapp.databinding.FragmentHomeBinding
 import com.dogactanriverdi.e_commerceapp.presentation.home.adapter.CategoriesAdapter
 import com.dogactanriverdi.e_commerceapp.presentation.home.adapter.OnSaleAdapter
@@ -32,6 +36,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        })
 
         val productsState = viewModel.productsState
         val saleProductsState = viewModel.saleProductsState
@@ -98,87 +108,87 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun observeProductsState(productsState: StateFlow<ProductsState>) {
+    private fun observeProductsState(state: StateFlow<ProductsState>) {
         viewLifecycleOwner.lifecycleScope.launch {
-            productsState.collect { state ->
+            state.collect { state ->
                 with(binding) {
 
                     if (state.isLoading) {
-                        tvErrorProducts.visibility = View.GONE
-                        rvProducts.visibility = View.GONE
-                        pbProducts.visibility = View.VISIBLE
+                        tvErrorProducts.gone()
+                        rvProducts.gone()
+                        pbProducts.visible()
                     }
 
                     if (state.error.isNotBlank()) {
-                        tvErrorProducts.visibility = View.VISIBLE
+                        tvErrorProducts.visible()
                         tvErrorProducts.text = state.error
-                        rvProducts.visibility = View.GONE
-                        pbProducts.visibility = View.GONE
+                        rvProducts.gone()
+                        pbProducts.gone()
                     }
 
-                    state.products?.let { products ->
-                        tvErrorProducts.visibility = View.GONE
-                        pbProducts.visibility = View.GONE
-                        rvProducts.visibility = View.VISIBLE
-                        productAdapter.recyclerListDiffer.submitList(products.products)
+                    state.products?.let { response ->
+                        tvErrorProducts.gone()
+                        pbProducts.gone()
+                        rvProducts.visible()
+                        productAdapter.recyclerListDiffer.submitList(response.products)
                     }
                 }
             }
         }
     }
 
-    private fun observeOnSaleProductsState(saleState: StateFlow<SaleProductsState>) {
+    private fun observeOnSaleProductsState(state: StateFlow<SaleProductsState>) {
         viewLifecycleOwner.lifecycleScope.launch {
-            saleState.collect { state ->
+            state.collect { state ->
                 with(binding) {
 
                     if (state.isLoading) {
-                        tvErrorOnSale.visibility = View.GONE
-                        rvOnSaleProducts.visibility = View.GONE
-                        pbOnSale.visibility = View.VISIBLE
+                        tvErrorOnSale.gone()
+                        rvOnSaleProducts.gone()
+                        pbOnSale.visible()
                     }
 
                     if (state.error.isNotBlank()) {
-                        tvErrorOnSale.visibility = View.VISIBLE
+                        tvErrorOnSale.visible()
                         tvErrorOnSale.text = state.error
-                        rvOnSaleProducts.visibility = View.GONE
-                        pbOnSale.visibility = View.GONE
+                        rvOnSaleProducts.gone()
+                        pbOnSale.gone()
                     }
 
-                    state.products?.let { products ->
-                        tvErrorOnSale.visibility = View.GONE
-                        pbOnSale.visibility = View.GONE
-                        rvOnSaleProducts.visibility = View.VISIBLE
-                        onSaleAdapter.recyclerListDiffer.submitList(products.products)
+                    state.products?.let { response ->
+                        tvErrorOnSale.gone()
+                        pbOnSale.gone()
+                        rvOnSaleProducts.visible()
+                        onSaleAdapter.recyclerListDiffer.submitList(response.products)
                     }
                 }
             }
         }
     }
 
-    private fun observeCategoriesState(categoriesState: StateFlow<CategoriesState>) {
+    private fun observeCategoriesState(state: StateFlow<CategoriesState>) {
         viewLifecycleOwner.lifecycleScope.launch {
-            categoriesState.collect { state ->
+            state.collect { state ->
                 with(binding) {
 
                     if (state.isLoading) {
-                        tvErrorCategories.visibility = View.GONE
-                        rvCategories.visibility = View.GONE
-                        pbCategories.visibility = View.VISIBLE
+                        tvErrorCategories.gone()
+                        rvCategories.gone()
+                        pbCategories.visible()
                     }
 
                     if (state.error.isNotBlank()) {
-                        tvErrorCategories.visibility = View.VISIBLE
+                        tvErrorCategories.visible()
                         tvErrorCategories.text = state.error
-                        rvCategories.visibility = View.GONE
-                        pbCategories.visibility = View.GONE
+                        rvCategories.gone()
+                        pbCategories.gone()
                     }
 
-                    state.categories?.let { categories ->
-                        tvErrorCategories.visibility = View.GONE
-                        pbCategories.visibility = View.GONE
-                        rvCategories.visibility = View.VISIBLE
-                        categoriesAdapter.recyclerListDiffer.submitList(categories.categories)
+                    state.categories?.let { response ->
+                        tvErrorCategories.gone()
+                        pbCategories.gone()
+                        rvCategories.visible()
+                        categoriesAdapter.recyclerListDiffer.submitList(response.categories)
                     }
                 }
             }

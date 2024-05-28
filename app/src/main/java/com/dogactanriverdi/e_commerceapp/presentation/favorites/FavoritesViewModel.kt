@@ -9,12 +9,10 @@ import com.dogactanriverdi.e_commerceapp.domain.model.favorite.DeleteFromFavorit
 import com.dogactanriverdi.e_commerceapp.domain.usecase.favorite.AddToFavoritesUseCase
 import com.dogactanriverdi.e_commerceapp.domain.usecase.favorite.ClearFavoritesUseCase
 import com.dogactanriverdi.e_commerceapp.domain.usecase.favorite.DeleteFromFavoritesUseCase
-import com.dogactanriverdi.e_commerceapp.domain.usecase.favorite.GetFavoriteCountUseCase
 import com.dogactanriverdi.e_commerceapp.domain.usecase.favorite.GetFavoritesUseCase
-import com.dogactanriverdi.e_commerceapp.presentation.detail.state.AddToFavoritesState
+import com.dogactanriverdi.e_commerceapp.presentation.favorites.state.AddToFavoritesState
 import com.dogactanriverdi.e_commerceapp.presentation.favorites.state.ClearFavoritesState
 import com.dogactanriverdi.e_commerceapp.presentation.favorites.state.DeleteFromFavoritesState
-import com.dogactanriverdi.e_commerceapp.presentation.favorites.state.FavoriteCountState
 import com.dogactanriverdi.e_commerceapp.presentation.favorites.state.FavoritesState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +25,6 @@ class FavoritesViewModel @Inject constructor(
     private val addToFavoritesUseCase: AddToFavoritesUseCase,
     private val deleteFromFavoritesUseCase: DeleteFromFavoritesUseCase,
     private val clearFavoritesUseCase: ClearFavoritesUseCase,
-    private val favoriteCountUseCase: GetFavoriteCountUseCase,
     private val favoritesUseCase: GetFavoritesUseCase
 ) : ViewModel() {
 
@@ -39,9 +36,6 @@ class FavoritesViewModel @Inject constructor(
 
     private val _clearFavoritesState = MutableStateFlow(ClearFavoritesState())
     val clearFavoritesState: StateFlow<ClearFavoritesState> = _clearFavoritesState
-
-    private val _favoriteCountState = MutableStateFlow(FavoriteCountState())
-    val favoriteCountState: StateFlow<FavoriteCountState> = _favoriteCountState
 
     private val _favoritesState = MutableStateFlow(FavoritesState())
     val favoritesState: StateFlow<FavoritesState> = _favoritesState
@@ -137,39 +131,6 @@ class FavoritesViewModel @Inject constructor(
                         _clearFavoritesState.value = clearFavoritesState.value.copy(
                             isLoading = false,
                             clearFavorites = null,
-                            error = favorites.message ?: "Unknown error!"
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    fun favoriteCount() {
-        viewModelScope.launch {
-            favoriteCountUseCase().collect { favorites ->
-                when (favorites) {
-
-                    is Resource.Loading -> {
-                        _favoriteCountState.value = favoriteCountState.value.copy(
-                            isLoading = true,
-                            favoriteCount = null,
-                            error = ""
-                        )
-                    }
-
-                    is Resource.Success -> {
-                        _favoriteCountState.value = favoriteCountState.value.copy(
-                            isLoading = false,
-                            favoriteCount = favorites.data,
-                            error = ""
-                        )
-                    }
-
-                    is Resource.Error -> {
-                        _favoriteCountState.value = favoriteCountState.value.copy(
-                            isLoading = false,
-                            favoriteCount = null,
                             error = favorites.message ?: "Unknown error!"
                         )
                     }

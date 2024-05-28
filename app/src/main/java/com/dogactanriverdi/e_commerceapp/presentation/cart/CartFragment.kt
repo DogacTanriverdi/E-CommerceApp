@@ -10,20 +10,19 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.dogactanriverdi.e_commerceapp.R
 import com.dogactanriverdi.e_commerceapp.common.Constants
+import com.dogactanriverdi.e_commerceapp.common.gone
 import com.dogactanriverdi.e_commerceapp.common.readUserId
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
+import com.dogactanriverdi.e_commerceapp.common.visible
 import com.dogactanriverdi.e_commerceapp.databinding.FragmentCartBinding
 import com.dogactanriverdi.e_commerceapp.domain.model.cart.AddToCartBody
 import com.dogactanriverdi.e_commerceapp.domain.model.cart.ClearCartBody
 import com.dogactanriverdi.e_commerceapp.domain.model.cart.DeleteFromCartBody
-import com.dogactanriverdi.e_commerceapp.domain.model.favorite.AddToFavoritesBody
-import com.dogactanriverdi.e_commerceapp.domain.model.favorite.DeleteFromFavoritesBody
-import com.dogactanriverdi.e_commerceapp.domain.model.user.ChangePasswordBody
-import com.dogactanriverdi.e_commerceapp.domain.model.user.EditProfileBody
 import com.dogactanriverdi.e_commerceapp.presentation.cart.adapter.CartAdapter
 import com.dogactanriverdi.e_commerceapp.presentation.cart.state.CartProductsState
 import com.dogactanriverdi.e_commerceapp.presentation.cart.state.ClearCartState
-import com.dogactanriverdi.e_commerceapp.presentation.profile.ProfileFragmentDirections
+import com.dogactanriverdi.e_commerceapp.presentation.cart.state.DeleteFromCartState
+import com.dogactanriverdi.e_commerceapp.presentation.detail.state.AddToCartState
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.StateFlow
@@ -43,6 +42,8 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
 
         val cartProductsState = viewModel.cartProductsState
         val clearCartState = viewModel.clearCartState
+        val deleteFromCartState = viewModel.deleteFromCartState
+        val addToCartState = viewModel.addToCartState
 
         lifecycleScope.launch {
             val userId = readUserId(requireContext(), Constants.DATASTORE_USER_ID_KEY)
@@ -81,6 +82,8 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
         setupCartAdapter()
 
         observeCartProduct(cartProductsState)
+        observeDeleteFromCart(deleteFromCartState)
+        observeAddToCart(addToCartState)
         observeClearCart(clearCartState)
 
         setSwipeToDelete()
@@ -101,26 +104,71 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
                 with(binding) {
 
                     if (state.isLoading) {
-                        progressBar.visibility = View.VISIBLE
-                        rvProducts.visibility = View.GONE
-                        tvError.visibility = View.GONE
-                        btnGoToPayment.visibility = View.GONE
+                        progressBar.visible()
+                        rvProducts.gone()
+                        tvError.gone()
+                        btnGoToPayment.gone()
                     }
 
                     if (state.error.isNotBlank()) {
-                        progressBar.visibility = View.GONE
-                        rvProducts.visibility = View.GONE
-                        tvError.visibility = View.VISIBLE
-                        btnGoToPayment.visibility = View.GONE
+                        progressBar.gone()
+                        rvProducts.gone()
+                        tvError.visible()
+                        btnGoToPayment.gone()
                         tvError.text = state.error
                     }
 
-                    state.products?.let { products ->
-                        progressBar.visibility = View.GONE
-                        rvProducts.visibility = View.VISIBLE
-                        tvError.visibility = View.GONE
-                        btnGoToPayment.visibility = View.VISIBLE
-                        cartAdapter.recyclerListDiffer.submitList(products.products)
+                    state.products?.let { response ->
+                        progressBar.gone()
+                        rvProducts.visible()
+                        tvError.gone()
+                        btnGoToPayment.visible()
+                        cartAdapter.recyclerListDiffer.submitList(response.products)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeDeleteFromCart(state: StateFlow<DeleteFromCartState>) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            state.collect { state ->
+                with(binding) {
+
+                    if (state.isLoading) {
+                        pbAddAndDeleteFromCart.visible()
+                    }
+
+                    if (state.error.isNotBlank()) {
+                        pbAddAndDeleteFromCart.gone()
+                        Snackbar.make(requireView(), state.error, Snackbar.LENGTH_SHORT).show()
+                    }
+
+                    state.deleteFromCart?.let { _ ->
+                        pbAddAndDeleteFromCart.gone()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeAddToCart(state: StateFlow<AddToCartState>) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            state.collect { state ->
+                with(binding) {
+
+                    if (state.isLoading) {
+                        pbAddAndDeleteFromCart.visible()
+                    }
+
+                    if (state.error.isNotBlank()) {
+                        pbAddAndDeleteFromCart.gone()
+                        Snackbar.make(requireView(), state.error, Snackbar.LENGTH_SHORT).show()
+                    }
+
+                    state.addToCart?.let { response ->
+                        pbAddAndDeleteFromCart.gone()
+                        Snackbar.make(requireView(), response.message, Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -133,13 +181,13 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
                 with(binding) {
 
                     if (state.isLoading) {
-                        pbClearCart.visibility = View.VISIBLE
-                        ibClearCart.visibility = View.GONE
+                        pbClearCart.visible()
+                        ibClearCart.gone()
                     }
 
                     if (state.error.isNotBlank()) {
-                        pbClearCart.visibility = View.GONE
-                        ibClearCart.visibility = View.VISIBLE
+                        pbClearCart.gone()
+                        ibClearCart.visible()
                         Snackbar.make(
                             requireView(),
                             state.error,
@@ -148,8 +196,8 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
                     }
 
                     state.clearCart?.let { response ->
-                        pbClearCart.visibility = View.GONE
-                        ibClearCart.visibility = View.VISIBLE
+                        pbClearCart.gone()
+                        ibClearCart.visible()
                         Snackbar.make(
                             requireView(),
                             response.message,
@@ -191,7 +239,7 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
                         Snackbar.make(
                             requireView(),
                             getString(R.string.product_successfully_deleted),
-                            Snackbar.LENGTH_LONG
+                            Snackbar.LENGTH_SHORT
                         ).setAction(getString(R.string.undo)) {
                             viewModel.addToCart(
                                 AddToCartBody(

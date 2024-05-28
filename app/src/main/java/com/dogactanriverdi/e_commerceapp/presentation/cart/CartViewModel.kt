@@ -10,10 +10,10 @@ import com.dogactanriverdi.e_commerceapp.domain.usecase.cart.AddToCartUseCase
 import com.dogactanriverdi.e_commerceapp.domain.usecase.cart.ClearCartUseCase
 import com.dogactanriverdi.e_commerceapp.domain.usecase.cart.DeleteFromCartUseCase
 import com.dogactanriverdi.e_commerceapp.domain.usecase.cart.GetCartProductsUseCase
-import com.dogactanriverdi.e_commerceapp.presentation.cart.state.AddToCartState
 import com.dogactanriverdi.e_commerceapp.presentation.cart.state.CartProductsState
 import com.dogactanriverdi.e_commerceapp.presentation.cart.state.ClearCartState
 import com.dogactanriverdi.e_commerceapp.presentation.cart.state.DeleteFromCartState
+import com.dogactanriverdi.e_commerceapp.presentation.detail.state.AddToCartState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,11 +31,11 @@ class CartViewModel @Inject constructor(
     private val _addToCartState = MutableStateFlow(AddToCartState())
     val addToCartState: StateFlow<AddToCartState> = _addToCartState
 
-    private val _clearCartState = MutableStateFlow(ClearCartState())
-    val clearCartState: StateFlow<ClearCartState> = _clearCartState
-
     private val _deleteFromCartState = MutableStateFlow(DeleteFromCartState())
     val deleteFromCartState: StateFlow<DeleteFromCartState> = _deleteFromCartState
+
+    private val _clearCartState = MutableStateFlow(ClearCartState())
+    val clearCartState: StateFlow<ClearCartState> = _clearCartState
 
     private val _cartProductsState = MutableStateFlow(CartProductsState())
     val cartProductsState: StateFlow<CartProductsState> = _cartProductsState
@@ -73,39 +73,6 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun clearCart(clearCartBody: ClearCartBody) {
-        viewModelScope.launch {
-            clearCartUseCase(clearCartBody).collect { cart ->
-                when (cart) {
-
-                    is Resource.Loading -> {
-                        _clearCartState.value = clearCartState.value.copy(
-                            isLoading = true,
-                            clearCart = null,
-                            error = ""
-                        )
-                    }
-
-                    is Resource.Success -> {
-                        _clearCartState.value = clearCartState.value.copy(
-                            isLoading = false,
-                            clearCart = cart.data,
-                            error = ""
-                        )
-                    }
-
-                    is Resource.Error -> {
-                        _clearCartState.value = clearCartState.value.copy(
-                            isLoading = false,
-                            clearCart = null,
-                            error = cart.message ?: "Unknown error!"
-                        )
-                    }
-                }
-            }
-        }
-    }
-
     fun deleteFomCart(deleteFromCartBody: DeleteFromCartBody) {
         viewModelScope.launch {
             deleteFromCartUseCase(deleteFromCartBody).collect { cart ->
@@ -131,6 +98,39 @@ class CartViewModel @Inject constructor(
                         _deleteFromCartState.value = deleteFromCartState.value.copy(
                             isLoading = false,
                             deleteFromCart = null,
+                            error = cart.message ?: "Unknown error!"
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    fun clearCart(clearCartBody: ClearCartBody) {
+        viewModelScope.launch {
+            clearCartUseCase(clearCartBody).collect { cart ->
+                when (cart) {
+
+                    is Resource.Loading -> {
+                        _clearCartState.value = clearCartState.value.copy(
+                            isLoading = true,
+                            clearCart = null,
+                            error = ""
+                        )
+                    }
+
+                    is Resource.Success -> {
+                        _clearCartState.value = clearCartState.value.copy(
+                            isLoading = false,
+                            clearCart = cart.data,
+                            error = ""
+                        )
+                    }
+
+                    is Resource.Error -> {
+                        _clearCartState.value = clearCartState.value.copy(
+                            isLoading = false,
+                            clearCart = null,
                             error = cart.message ?: "Unknown error!"
                         )
                     }

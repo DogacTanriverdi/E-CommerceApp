@@ -8,8 +8,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dogactanriverdi.e_commerceapp.R
 import com.dogactanriverdi.e_commerceapp.common.Constants
+import com.dogactanriverdi.e_commerceapp.common.gone
 import com.dogactanriverdi.e_commerceapp.common.readUserId
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
+import com.dogactanriverdi.e_commerceapp.common.visible
 import com.dogactanriverdi.e_commerceapp.databinding.FragmentAddAddressBinding
 import com.dogactanriverdi.e_commerceapp.domain.model.address.AddAddressBody
 import com.dogactanriverdi.e_commerceapp.presentation.addaddress.state.AddAddressState
@@ -27,6 +29,8 @@ class AddAddressFragment : Fragment(R.layout.fragment_add_address) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val addAddressState = viewModel.addAddressState
 
         lifecycleScope.launch {
             val userId = readUserId(requireContext(), Constants.DATASTORE_USER_ID_KEY)
@@ -50,7 +54,7 @@ class AddAddressFragment : Fragment(R.layout.fragment_add_address) {
             }
         }
 
-        observeAddAddress(viewModel.addAddressState)
+        observeAddAddress(addAddressState)
     }
 
     private fun observeAddAddress(state: StateFlow<AddAddressState>) {
@@ -59,22 +63,22 @@ class AddAddressFragment : Fragment(R.layout.fragment_add_address) {
                 with(binding) {
 
                     if (state.isLoading) {
-                        progressBar.visibility = View.VISIBLE
-                        tvError.visibility = View.GONE
-                        addAddressLayout.visibility = View.GONE
+                        progressBar.visible()
+                        tvError.gone()
+                        addAddressLayout.gone()
                     }
 
                     if (state.error.isNotBlank()) {
-                        progressBar.visibility = View.GONE
-                        tvError.visibility = View.VISIBLE
-                        addAddressLayout.visibility = View.GONE
+                        progressBar.gone()
+                        tvError.visible()
+                        addAddressLayout.gone()
                         tvError.text = state.error
                     }
 
                     state.addAddress?.let { response ->
-                        progressBar.visibility = View.GONE
-                        tvError.visibility = View.GONE
-                        addAddressLayout.visibility = View.VISIBLE
+                        progressBar.gone()
+                        tvError.gone()
+                        addAddressLayout.visible()
                         Snackbar.make(requireView(), response.message, Snackbar.LENGTH_SHORT).show()
                         if (response.status == 200) {
                             etAddressTitle.text?.clear()

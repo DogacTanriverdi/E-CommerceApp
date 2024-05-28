@@ -8,7 +8,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.dogactanriverdi.e_commerceapp.R
+import com.dogactanriverdi.e_commerceapp.common.gone
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
+import com.dogactanriverdi.e_commerceapp.common.visible
 import com.dogactanriverdi.e_commerceapp.databinding.FragmentCategoriesBinding
 import com.dogactanriverdi.e_commerceapp.presentation.categories.adapter.CategoriesAdapter
 import com.dogactanriverdi.e_commerceapp.presentation.categories.state.ProductsState
@@ -30,11 +32,13 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val productsState = viewModel.productsState
+
         viewModel.getProductsByCategory(args.categoryName)
 
         setupCategoriesAdapter()
 
-        observeProductsState(viewModel.productsState)
+        observeProductsState(productsState)
     }
 
     private fun setupCategoriesAdapter() {
@@ -49,29 +53,29 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories) {
         }
     }
 
-    private fun observeProductsState(productsState: StateFlow<ProductsState>) {
+    private fun observeProductsState(state: StateFlow<ProductsState>) {
         viewLifecycleOwner.lifecycleScope.launch {
-            productsState.collect { state ->
+            state.collect { state ->
                 with(binding) {
 
                     if (state.isLoading) {
-                        tvError.visibility = View.GONE
-                        rvCategories.visibility = View.GONE
-                        progressBar.visibility = View.VISIBLE
+                        tvError.gone()
+                        rvCategories.gone()
+                        progressBar.gone()
                     }
 
                     if (state.error.isNotBlank()) {
-                        tvError.visibility = View.VISIBLE
+                        tvError.visible()
                         tvError.text = state.error
-                        rvCategories.visibility = View.GONE
-                        progressBar.visibility = View.GONE
+                        rvCategories.gone()
+                        progressBar.gone()
                     }
 
-                    state.products?.let { products ->
-                        tvError.visibility = View.GONE
-                        progressBar.visibility = View.GONE
-                        rvCategories.visibility = View.VISIBLE
-                        categoriesAdapter.recyclerListDiffer.submitList(products.products)
+                    state.products?.let { response ->
+                        tvError.gone()
+                        progressBar.gone()
+                        rvCategories.visible()
+                        categoriesAdapter.recyclerListDiffer.submitList(response.products)
                     }
                 }
             }

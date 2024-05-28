@@ -2,14 +2,17 @@ package com.dogactanriverdi.e_commerceapp.presentation.profile
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dogactanriverdi.e_commerceapp.R
 import com.dogactanriverdi.e_commerceapp.common.Constants.DATASTORE_USER_ID_KEY
+import com.dogactanriverdi.e_commerceapp.common.gone
 import com.dogactanriverdi.e_commerceapp.common.readUserId
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
+import com.dogactanriverdi.e_commerceapp.common.visible
 import com.dogactanriverdi.e_commerceapp.databinding.FragmentProfileBinding
 import com.dogactanriverdi.e_commerceapp.domain.model.user.ChangePasswordBody
 import com.dogactanriverdi.e_commerceapp.domain.model.user.EditProfileBody
@@ -19,7 +22,6 @@ import com.dogactanriverdi.e_commerceapp.presentation.profile.state.UserState
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -31,6 +33,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        })
 
         val userState = viewModel.userState
         val editProfileState = viewModel.editProfileState
@@ -88,21 +96,21 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
                     if (state.isLoading) {
                         btnChangePassword.isEnabled = false
-                        pbChangePassword.visibility = View.VISIBLE
-                        tvChangePasswordError.visibility = View.GONE
+                        pbChangePassword.visible()
+                        tvChangePasswordError.gone()
                     }
 
                     if (state.error.isNotBlank()) {
                         btnChangePassword.isEnabled = true
-                        pbChangePassword.visibility = View.GONE
-                        tvChangePasswordError.visibility = View.VISIBLE
+                        pbChangePassword.gone()
+                        tvChangePasswordError.visible()
                         tvChangePasswordError.text = state.error
                     }
 
                     state.changePassword?.let { user ->
                         btnChangePassword.isEnabled = true
-                        pbChangePassword.visibility = View.GONE
-                        tvChangePasswordError.visibility = View.GONE
+                        pbChangePassword.gone()
+                        tvChangePasswordError.gone()
                         Snackbar.make(requireView(), user.message, Snackbar.LENGTH_SHORT).show()
                     }
                 }
@@ -117,21 +125,21 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
                     if (state.isLoading) {
                         btnSave.isEnabled = false
-                        pbEditProfile.visibility = View.VISIBLE
-                        tvEditProfileError.visibility = View.GONE
+                        pbEditProfile.visible()
+                        tvEditProfileError.gone()
                     }
 
                     if (state.error.isNotBlank()) {
                         btnSave.isEnabled = true
-                        pbEditProfile.visibility = View.GONE
-                        tvEditProfileError.visibility = View.VISIBLE
+                        pbEditProfile.gone()
+                        tvEditProfileError.visible()
                         tvEditProfileError.text = state.error
                     }
 
                     state.editProfile?.let { user ->
                         btnSave.isEnabled = true
-                        pbEditProfile.visibility = View.GONE
-                        tvEditProfileError.visibility = View.GONE
+                        pbEditProfile.gone()
+                        tvEditProfileError.gone()
                         Snackbar.make(requireView(), user.message, Snackbar.LENGTH_SHORT).show()
                     }
                 }
@@ -139,28 +147,28 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
     }
 
-    private fun observeGetUser(userState: StateFlow<UserState>) {
+    private fun observeGetUser(state: StateFlow<UserState>) {
         viewLifecycleOwner.lifecycleScope.launch {
-            userState.collect { state ->
+            state.collect { state ->
                 with(binding) {
 
                     if (state.isLoading) {
-                        progressBar.visibility = View.VISIBLE
-                        nestedScrollView.visibility = View.GONE
-                        tvError.visibility = View.GONE
+                        progressBar.visible()
+                        nestedScrollView.gone()
+                        tvError.gone()
                     }
 
                     if (state.error.isNotBlank()) {
-                        progressBar.visibility = View.GONE
-                        nestedScrollView.visibility = View.GONE
-                        tvError.visibility = View.VISIBLE
+                        progressBar.gone()
+                        nestedScrollView.gone()
+                        tvError.visible()
                         tvError.text = state.error
                     }
 
                     state.user?.user?.let { user ->
-                        progressBar.visibility = View.GONE
-                        nestedScrollView.visibility = View.VISIBLE
-                        tvError.visibility = View.GONE
+                        progressBar.gone()
+                        nestedScrollView.visible()
+                        tvError.gone()
 
                         etName.setText(user.name)
                         etPhone.setText(user.phone)

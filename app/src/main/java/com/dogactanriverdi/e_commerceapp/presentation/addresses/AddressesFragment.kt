@@ -8,8 +8,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dogactanriverdi.e_commerceapp.R
 import com.dogactanriverdi.e_commerceapp.common.Constants.DATASTORE_USER_ID_KEY
+import com.dogactanriverdi.e_commerceapp.common.gone
 import com.dogactanriverdi.e_commerceapp.common.readUserId
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
+import com.dogactanriverdi.e_commerceapp.common.visible
 import com.dogactanriverdi.e_commerceapp.databinding.FragmentAddressesBinding
 import com.dogactanriverdi.e_commerceapp.presentation.addresses.adapter.AddressesAdapter
 import com.dogactanriverdi.e_commerceapp.presentation.addresses.state.AddressesState
@@ -66,26 +68,26 @@ class AddressesFragment : Fragment(R.layout.fragment_addresses) {
                 with(binding) {
 
                     if (state.isLoading) {
-                        progressBar.visibility = View.VISIBLE
-                        rvAddresses.visibility = View.GONE
-                        tvError.visibility = View.GONE
-                        btnAddAddress.visibility = View.GONE
+                        progressBar.visible()
+                        rvAddresses.gone()
+                        tvError.gone()
+                        btnAddAddress.gone()
                     }
 
                     if (state.error.isNotBlank()) {
-                        progressBar.visibility = View.GONE
-                        rvAddresses.visibility = View.GONE
-                        tvError.visibility = View.VISIBLE
-                        btnAddAddress.visibility = View.GONE
+                        progressBar.gone()
+                        rvAddresses.gone()
+                        tvError.visible()
+                        btnAddAddress.gone()
                         tvError.text = state.error
                     }
 
-                    state.addresses?.let { addresses ->
-                        progressBar.visibility = View.GONE
-                        tvError.visibility = View.GONE
-                        btnAddAddress.visibility = View.VISIBLE
-                        rvAddresses.visibility = View.VISIBLE
-                        addressesAdapter.recyclerListDiffer.submitList(addresses.addresses)
+                    state.addresses?.let { response ->
+                        progressBar.gone()
+                        tvError.gone()
+                        btnAddAddress.visible()
+                        rvAddresses.visible()
+                        addressesAdapter.recyclerListDiffer.submitList(response.addresses)
                     }
                 }
             }

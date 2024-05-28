@@ -3,7 +3,6 @@ package com.dogactanriverdi.e_commerceapp.presentation.seeall
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dogactanriverdi.e_commerceapp.common.Resource
-import com.dogactanriverdi.e_commerceapp.domain.usecase.category.GetCategoriesUseCase
 import com.dogactanriverdi.e_commerceapp.domain.usecase.product.GetProductsUseCase
 import com.dogactanriverdi.e_commerceapp.domain.usecase.product.GetSaleProductsUseCase
 import com.dogactanriverdi.e_commerceapp.presentation.seeall.state.ProductsState

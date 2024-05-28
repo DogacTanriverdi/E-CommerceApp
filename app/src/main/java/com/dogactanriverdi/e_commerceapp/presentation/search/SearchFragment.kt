@@ -2,14 +2,16 @@ package com.dogactanriverdi.e_commerceapp.presentation.search
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.dogactanriverdi.e_commerceapp.R
+import com.dogactanriverdi.e_commerceapp.common.gone
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
+import com.dogactanriverdi.e_commerceapp.common.visible
 import com.dogactanriverdi.e_commerceapp.databinding.FragmentSearchBinding
 import com.dogactanriverdi.e_commerceapp.presentation.search.adapter.SearchAdapter
 import com.dogactanriverdi.e_commerceapp.presentation.search.state.SearchState
@@ -29,7 +31,13 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val state = viewModel.state
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        })
+
+        val searchState = viewModel.searchState
 
         with(binding) {
             val query = etSearch
@@ -38,11 +46,11 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             query.addTextChangedListener { editTextNullable ->
                 editTextNullable?.let { editText ->
                     if (editText.isNotBlank()) {
-                        rvSearch.visibility = View.VISIBLE
+                        rvSearch.visible()
                         val searchQuery = editText.toString()
                         viewModel.searchProduct(searchQuery)
                     } else {
-                        rvSearch.visibility = View.GONE
+                        rvSearch.gone()
                         return@let
                     }
                 }
@@ -54,7 +62,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         }
 
         setupSearchAdapter()
-        observeSearchProduct(state)
+        observeSearchProduct(searchState)
     }
 
     private fun setupSearchAdapter() {
@@ -76,22 +84,22 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 state.collect { state ->
 
                     if (state.isLoading) {
-                        tvError.visibility = View.GONE
-                        rvSearch.visibility = View.GONE
-                        progressBar.visibility = View.VISIBLE
+                        tvError.gone()
+                        rvSearch.gone()
+                        progressBar.visible()
                     }
 
                     if (state.error.isNotBlank()) {
-                        tvError.visibility = View.VISIBLE
+                        tvError.visible()
                         tvError.text = state.error
-                        rvSearch.visibility = View.GONE
-                        progressBar.visibility = View.GONE
+                        rvSearch.gone()
+                        progressBar.gone()
                     }
 
                     state.search?.let { products ->
-                        tvError.visibility = View.GONE
-                        progressBar.visibility = View.GONE
-                        rvSearch.visibility = View.VISIBLE
+                        tvError.gone()
+                        progressBar.gone()
+                        rvSearch.visible()
                         searchAdapter.recyclerListDiffer.submitList(products.products)
                     }
                 }

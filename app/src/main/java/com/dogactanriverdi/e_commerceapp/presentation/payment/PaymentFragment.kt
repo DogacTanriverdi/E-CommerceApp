@@ -8,8 +8,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dogactanriverdi.e_commerceapp.R
 import com.dogactanriverdi.e_commerceapp.common.Constants
+import com.dogactanriverdi.e_commerceapp.common.gone
 import com.dogactanriverdi.e_commerceapp.common.readUserId
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
+import com.dogactanriverdi.e_commerceapp.common.visible
 import com.dogactanriverdi.e_commerceapp.databinding.FragmentPaymentBinding
 import com.dogactanriverdi.e_commerceapp.domain.model.cart.ClearCartBody
 import com.dogactanriverdi.e_commerceapp.presentation.cart.CartViewModel
@@ -76,8 +78,8 @@ class PaymentFragment : Fragment(R.layout.fragment_payment) {
                             val userId =
                                 readUserId(requireContext(), Constants.DATASTORE_USER_ID_KEY)
                             userId?.let {
-                                paymentLayout.visibility = View.GONE
-                                ivPaymentCompleted.visibility = View.VISIBLE
+                                paymentLayout.gone()
+                                ivPaymentCompleted.visible()
                                 cartViewModel.clearCart(ClearCartBody(userId))
                             }
                         }

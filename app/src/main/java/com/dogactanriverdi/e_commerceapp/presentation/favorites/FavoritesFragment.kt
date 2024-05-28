@@ -2,23 +2,27 @@ package com.dogactanriverdi.e_commerceapp.presentation.favorites
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.dogactanriverdi.e_commerceapp.R
 import com.dogactanriverdi.e_commerceapp.common.Constants.DATASTORE_USER_ID_KEY
+import com.dogactanriverdi.e_commerceapp.common.gone
 import com.dogactanriverdi.e_commerceapp.common.readUserId
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
+import com.dogactanriverdi.e_commerceapp.common.visible
 import com.dogactanriverdi.e_commerceapp.databinding.FragmentFavoritesBinding
 import com.dogactanriverdi.e_commerceapp.domain.model.favorite.AddToFavoritesBody
 import com.dogactanriverdi.e_commerceapp.domain.model.favorite.ClearFavoritesBody
 import com.dogactanriverdi.e_commerceapp.domain.model.favorite.DeleteFromFavoritesBody
 import com.dogactanriverdi.e_commerceapp.presentation.favorites.adapter.FavoritesAdapter
+import com.dogactanriverdi.e_commerceapp.presentation.favorites.state.AddToFavoritesState
 import com.dogactanriverdi.e_commerceapp.presentation.favorites.state.ClearFavoritesState
+import com.dogactanriverdi.e_commerceapp.presentation.favorites.state.DeleteFromFavoritesState
 import com.dogactanriverdi.e_commerceapp.presentation.favorites.state.FavoritesState
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,7 +41,15 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        })
+
         val favoritesState = viewModel.favoritesState
+        val deleteFromFavoritesState = viewModel.deleteFromFavoritesState
+        val addToFavoritesState = viewModel.addToFavoritesState
         val clearFavoritesState = viewModel.clearFavoritesState
 
         lifecycleScope.launch {
@@ -54,10 +66,13 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
         }
 
         setupFavoritesAdapter()
+
         observeFavorites(favoritesState)
+        observeDeleteFromFavorites(deleteFromFavoritesState)
+        observeAddToFavorites(addToFavoritesState)
+        observeClearFavorites(clearFavoritesState)
 
         setSwipeToDelete()
-        observeClearFavorites(clearFavoritesState)
     }
 
     private fun setupFavoritesAdapter() {
@@ -71,62 +86,103 @@ class FavoritesFragment : Fragment(R.layout.fragment_favorites) {
         }
     }
 
-    private fun observeFavorites(favoritesState: StateFlow<FavoritesState>) {
+    private fun observeFavorites(state: StateFlow<FavoritesState>) {
         viewLifecycleOwner.lifecycleScope.launch {
-            favoritesState.collect { state ->
+            state.collect { state ->
                 with(binding) {
 
                     if (state.isLoading) {
-                        progressBar.visibility = View.VISIBLE
-                        rvFavorites.visibility = View.GONE
-                        tvError.visibility = View.GONE
-                        ibClearFavorites.visibility = View.GONE
+                        progressBar.visible()
+                        rvFavorites.gone()
+                        tvError.gone()
+                        ibClearFavorites.gone()
                     }
 
                     if (state.error.isNotBlank()) {
-                        progressBar.visibility = View.GONE
-                        rvFavorites.visibility = View.GONE
-                        tvError.visibility = View.VISIBLE
+                        progressBar.gone()
+                        rvFavorites.gone()
+                        tvError.visible()
                         tvError.text = state.error
-                        ibClearFavorites.visibility = View.GONE
+                        ibClearFavorites.gone()
                     }
 
-                    state.favorites?.let { products ->
-                        progressBar.visibility = View.GONE
-                        tvError.visibility = View.GONE
-                        rvFavorites.visibility = View.VISIBLE
-                        ibClearFavorites.visibility = View.VISIBLE
-                        favoritesAdapter.recyclerListDiffer.submitList(products.products)
+                    state.favorites?.let { response ->
+                        progressBar.gone()
+                        tvError.gone()
+                        rvFavorites.visible()
+                        ibClearFavorites.visible()
+                        favoritesAdapter.recyclerListDiffer.submitList(response.products)
                     }
                 }
             }
         }
     }
 
-    private fun observeClearFavorites(clearFavoritesState: StateFlow<ClearFavoritesState>) {
+    private fun observeDeleteFromFavorites(state: StateFlow<DeleteFromFavoritesState>) {
         viewLifecycleOwner.lifecycleScope.launch {
-            clearFavoritesState.collect { state ->
+            state.collect { state ->
                 with(binding) {
 
                     if (state.isLoading) {
-                        pbClearFavorites.visibility = View.VISIBLE
-                        ibClearFavorites.visibility = View.GONE
+                        pbAddAndDeleteFromFavorites.visible()
                     }
 
                     if (state.error.isNotBlank()) {
-                        pbClearFavorites.visibility = View.GONE
-                        ibClearFavorites.visibility = View.GONE
-                        val snackbar =
-                            Snackbar.make(requireView(), state.error, Snackbar.LENGTH_SHORT)
-                        snackbar.show()
+                        pbAddAndDeleteFromFavorites.gone()
+                        Snackbar.make(requireView(), state.error, Snackbar.LENGTH_SHORT).show()
+                    }
+
+                    state.deleteFromFavorites?.let { _ ->
+                        pbAddAndDeleteFromFavorites.gone()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeAddToFavorites(state: StateFlow<AddToFavoritesState>) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            state.collect { state ->
+                with(binding) {
+
+                    if (state.isLoading) {
+                        pbAddAndDeleteFromFavorites.visible()
+                    }
+
+                    if (state.error.isNotBlank()) {
+                        pbAddAndDeleteFromFavorites.gone()
+                        Snackbar.make(requireView(), state.error, Snackbar.LENGTH_SHORT).show()
+                    }
+
+                    state.addToFavorites?.let { response ->
+                        pbAddAndDeleteFromFavorites.gone()
+                        Snackbar.make(requireView(), response.message, Snackbar.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeClearFavorites(state: StateFlow<ClearFavoritesState>) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            state.collect { state ->
+                with(binding) {
+
+                    if (state.isLoading) {
+                        pbClearFavorites.visible()
+                        ibClearFavorites.gone()
+                    }
+
+                    if (state.error.isNotBlank()) {
+                        pbClearFavorites.gone()
+                        ibClearFavorites.gone()
+                        Snackbar.make(requireView(), state.error, Snackbar.LENGTH_SHORT).show()
                     }
 
                     state.clearFavorites?.let { response ->
-                        pbClearFavorites.visibility = View.GONE
-                        ibClearFavorites.visibility = View.VISIBLE
-                        val snackbar =
-                            Snackbar.make(requireView(), response.message, Snackbar.LENGTH_SHORT)
-                        snackbar.show()
+                        pbClearFavorites.gone()
+                        ibClearFavorites.visible()
+                        Snackbar.make(requireView(), response.message, Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }

@@ -8,7 +8,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.dogactanriverdi.e_commerceapp.R
+import com.dogactanriverdi.e_commerceapp.common.gone
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
+import com.dogactanriverdi.e_commerceapp.common.visible
 import com.dogactanriverdi.e_commerceapp.databinding.FragmentSeeAllBinding
 import com.dogactanriverdi.e_commerceapp.presentation.seeall.adapter.SeeAllAdapter
 import com.dogactanriverdi.e_commerceapp.presentation.seeall.state.ProductsState
@@ -31,14 +33,17 @@ class SeeAllFragment : Fragment(R.layout.fragment_see_all) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val productsState = viewModel.productsState
+        val saleProductsState = viewModel.saleProductsState
+
         setupSeeAllAdapter()
 
         if (!args.saleState) {
             viewModel.getProducts()
-            observeProductsState(viewModel.productsState)
+            observeProductsState(productsState)
         } else {
             viewModel.getSaleProducts()
-            observeOnSaleProductsState(viewModel.saleProductsState)
+            observeOnSaleProductsState(saleProductsState)
         }
     }
 
@@ -53,28 +58,28 @@ class SeeAllFragment : Fragment(R.layout.fragment_see_all) {
         }
     }
 
-    private fun observeProductsState(productsState: StateFlow<ProductsState>) {
+    private fun observeProductsState(state: StateFlow<ProductsState>) {
         viewLifecycleOwner.lifecycleScope.launch {
-            productsState.collect { state ->
+            state.collect { state ->
                 with(binding) {
 
                     if (state.isLoading) {
-                        tvError.visibility = View.GONE
-                        rvSeeAll.visibility = View.GONE
-                        progressBar.visibility = View.VISIBLE
+                        tvError.gone()
+                        rvSeeAll.gone()
+                        progressBar.visible()
                     }
 
                     if (state.error.isNotBlank()) {
-                        tvError.visibility = View.VISIBLE
+                        tvError.visible()
                         tvError.text = state.error
-                        rvSeeAll.visibility = View.GONE
-                        progressBar.visibility = View.GONE
+                        rvSeeAll.gone()
+                        progressBar.gone()
                     }
 
                     state.products?.let { products ->
-                        tvError.visibility = View.GONE
-                        progressBar.visibility = View.GONE
-                        rvSeeAll.visibility = View.VISIBLE
+                        tvError.gone()
+                        progressBar.gone()
+                        rvSeeAll.visible()
                         seeAllAdapter.recyclerListDiffer.submitList(products.products)
                     }
                 }
@@ -82,28 +87,28 @@ class SeeAllFragment : Fragment(R.layout.fragment_see_all) {
         }
     }
 
-    private fun observeOnSaleProductsState(saleState: StateFlow<SaleProductsState>) {
+    private fun observeOnSaleProductsState(state: StateFlow<SaleProductsState>) {
         viewLifecycleOwner.lifecycleScope.launch {
-            saleState.collect { state ->
+            state.collect { state ->
                 with(binding) {
 
                     if (state.isLoading) {
-                        tvError.visibility = View.GONE
-                        rvSeeAll.visibility = View.GONE
-                        progressBar.visibility = View.VISIBLE
+                        tvError.gone()
+                        rvSeeAll.gone()
+                        progressBar.visible()
                     }
 
                     if (state.error.isNotBlank()) {
-                        tvError.visibility = View.VISIBLE
+                        tvError.visible()
                         tvError.text = state.error
-                        rvSeeAll.visibility = View.GONE
-                        progressBar.visibility = View.GONE
+                        rvSeeAll.gone()
+                        progressBar.gone()
                     }
 
                     state.products?.let { products ->
-                        tvError.visibility = View.GONE
-                        progressBar.visibility = View.GONE
-                        rvSeeAll.visibility = View.VISIBLE
+                        tvError.gone()
+                        progressBar.gone()
+                        rvSeeAll.visible()
                         seeAllAdapter.recyclerListDiffer.submitList(products.products)
                     }
                 }

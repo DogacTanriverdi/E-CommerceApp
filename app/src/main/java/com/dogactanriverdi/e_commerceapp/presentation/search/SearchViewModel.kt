@@ -16,8 +16,8 @@ class SearchViewModel @Inject constructor(
     private val useCase: SearchProductUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(SearchState())
-    val state: StateFlow<SearchState> = _state
+    private val _searchState = MutableStateFlow(SearchState())
+    val searchState: StateFlow<SearchState> = _searchState
 
     fun searchProduct(searchQuery: String) {
         viewModelScope.launch {
@@ -25,7 +25,7 @@ class SearchViewModel @Inject constructor(
                 when (products) {
 
                     is Resource.Loading -> {
-                        _state.value = state.value.copy(
+                        _searchState.value = searchState.value.copy(
                             isLoading = true,
                             search = null,
                             error = ""
@@ -33,7 +33,7 @@ class SearchViewModel @Inject constructor(
                     }
 
                     is Resource.Success -> {
-                        _state.value = state.value.copy(
+                        _searchState.value = searchState.value.copy(
                             isLoading = false,
                             search = products.data,
                             error = ""
@@ -41,7 +41,7 @@ class SearchViewModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
-                        _state.value = state.value.copy(
+                        _searchState.value = searchState.value.copy(
                             isLoading = false,
                             search = null,
                             error = products.message ?: "Unknown error!"

@@ -1,7 +1,6 @@
 package com.dogactanriverdi.e_commerceapp.presentation.detail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -10,9 +9,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.dogactanriverdi.e_commerceapp.R
 import com.dogactanriverdi.e_commerceapp.common.Constants.DATASTORE_USER_ID_KEY
+import com.dogactanriverdi.e_commerceapp.common.gone
 import com.dogactanriverdi.e_commerceapp.common.loadImage
 import com.dogactanriverdi.e_commerceapp.common.readUserId
 import com.dogactanriverdi.e_commerceapp.common.viewBinding
+import com.dogactanriverdi.e_commerceapp.common.visible
 import com.dogactanriverdi.e_commerceapp.databinding.FragmentDetailBinding
 import com.dogactanriverdi.e_commerceapp.domain.model.cart.AddToCartBody
 import com.dogactanriverdi.e_commerceapp.domain.model.favorite.AddToFavoritesBody
@@ -22,7 +23,6 @@ import com.dogactanriverdi.e_commerceapp.presentation.detail.state.DetailState
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -79,51 +79,49 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         observeAddToCart(addToCartState)
     }
 
-    private fun observeProductDetail(detailState: StateFlow<DetailState>) {
+    private fun observeProductDetail(state: StateFlow<DetailState>) {
         viewLifecycleOwner.lifecycleScope.launch {
-
             with(binding) {
-
-                detailState.collect { state ->
+                state.collect { state ->
 
                     if (state.isLoading) {
-                        tvError.visibility = View.GONE
-                        nestedScrollView.visibility = View.GONE
-                        ibBack.visibility = View.GONE
-                        ibAddFavorite.visibility = View.GONE
-                        bottomLayout.visibility = View.GONE
-                        progressBar.visibility = View.VISIBLE
+                        tvError.gone()
+                        nestedScrollView.gone()
+                        ibBack.gone()
+                        ibAddFavorite.gone()
+                        bottomLayout.gone()
+                        progressBar.visible()
                     }
 
                     if (state.error.isNotBlank()) {
-                        tvError.visibility = View.VISIBLE
+                        tvError.visible()
                         tvError.text = state.error
-                        ibBack.visibility = View.VISIBLE
-                        nestedScrollView.visibility = View.GONE
-                        bottomLayout.visibility = View.GONE
-                        progressBar.visibility = View.GONE
+                        ibBack.visible()
+                        nestedScrollView.gone()
+                        bottomLayout.gone()
+                        progressBar.gone()
                     }
 
                     state.detail?.let { detail ->
-                        tvError.visibility = View.GONE
-                        progressBar.visibility = View.GONE
-                        nestedScrollView.visibility = View.VISIBLE
-                        bottomLayout.visibility = View.VISIBLE
-                        ibBack.visibility = View.VISIBLE
-                        ibAddFavorite.visibility = View.VISIBLE
+                        tvError.gone()
+                        progressBar.gone()
+                        nestedScrollView.visible()
+                        bottomLayout.visible()
+                        ibBack.visible()
+                        ibAddFavorite.visible()
 
-                        detail.product.let { product ->
-                            ivProductImage.loadImage(product.imageOne)
-                            tvTitle.text = product.title
-                            tvCategory.text = product.category
-                            tvDescription.text = product.description
-                            if (product.saleState) {
-                                tvPrice.text = product.salePrice.toString()
+                        detail.product.let { response ->
+                            ivProductImage.loadImage(response.imageOne)
+                            tvTitle.text = response.title
+                            tvCategory.text = response.category
+                            tvDescription.text = response.description
+                            if (response.saleState) {
+                                tvPrice.text = response.salePrice.toString()
                             } else {
-                                tvPrice.text = product.price.toString()
+                                tvPrice.text = response.price.toString()
                             }
-                            tvInStock.text = "${getString(R.string.in_stock)} ${product.count}"
-                            tvRate.text = product.rate.toString()
+                            tvInStock.text = "${getString(R.string.in_stock)} ${response.count}"
+                            tvRate.text = response.rate.toString()
                         }
                     }
                 }
@@ -131,55 +129,51 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         }
     }
 
-    private fun observeAddToFavorites(addToFavoritesState: StateFlow<AddToFavoritesState>) {
+    private fun observeAddToFavorites(state: StateFlow<AddToFavoritesState>) {
         viewLifecycleOwner.lifecycleScope.launch {
             with(binding) {
-                addToFavoritesState.collect { state ->
+                state.collect { state ->
 
                     if (state.isLoading) {
-                        ibAddFavorite.visibility = View.GONE
-                        pbFavorites.visibility = View.VISIBLE
+                        ibAddFavorite.gone()
+                        pbFavorites.visible()
                     }
 
                     if (state.error.isNotBlank()) {
-                        ibAddFavorite.visibility = View.VISIBLE
-                        pbFavorites.visibility = View.GONE
-                        val snackbar =
-                            Snackbar.make(requireView(), state.error, Snackbar.LENGTH_SHORT)
-                        snackbar.show()
+                        ibAddFavorite.visible()
+                        pbFavorites.gone()
+                        Snackbar.make(requireView(), state.error, Snackbar.LENGTH_SHORT).show()
                     }
 
                     state.addToFavorites?.let { response ->
-                        ibAddFavorite.visibility = View.VISIBLE
-                        pbFavorites.visibility = View.GONE
-                        val snackbar =
-                            Snackbar.make(requireView(), response.message, Snackbar.LENGTH_SHORT)
-                        snackbar.show()
+                        ibAddFavorite.visible()
+                        pbFavorites.gone()
+                        Snackbar.make(requireView(), response.message, Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }
         }
     }
 
-    private fun observeAddToCart(addToCartState: StateFlow<AddToCartState>) {
+    private fun observeAddToCart(state: StateFlow<AddToCartState>) {
         viewLifecycleOwner.lifecycleScope.launch {
             with(binding) {
-                addToCartState.collect { state ->
+                state.collect { state ->
 
                     if (state.isLoading) {
-                        tvAddToCart.visibility = View.GONE
-                        pbAddToCart.visibility = View.VISIBLE
+                        tvAddToCart.gone()
+                        pbAddToCart.visible()
                     }
 
                     if (state.error.isNotBlank()) {
-                        tvAddToCart.visibility = View.VISIBLE
-                        pbAddToCart.visibility = View.GONE
+                        tvAddToCart.visible()
+                        pbAddToCart.gone()
                         Snackbar.make(requireView(), state.error, Snackbar.LENGTH_SHORT).show()
                     }
 
                     state.addToCart?.let { response ->
-                        tvAddToCart.visibility = View.VISIBLE
-                        pbAddToCart.visibility = View.GONE
+                        tvAddToCart.visible()
+                        pbAddToCart.gone()
                         if (response.status == 400) {
                             Snackbar.make(requireView(), response.message, Snackbar.LENGTH_SHORT)
                                 .show()
@@ -193,7 +187,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                                     DetailFragmentDirections.actionDetailFragmentToCartFragment()
                                 findNavController().navigate(action)
                             }.show()
-
                         }
                     }
                 }
