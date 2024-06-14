@@ -34,6 +34,8 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private val args: DetailFragmentArgs by navArgs()
 
+    private var snackbar: Snackbar? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -174,11 +176,12 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     state.addToCart?.let { response ->
                         tvAddToCart.visible()
                         pbAddToCart.gone()
+
                         if (response.status == 400) {
                             Snackbar.make(requireView(), response.message, Snackbar.LENGTH_SHORT)
                                 .show()
                         } else if (response.status == 200) {
-                            Snackbar.make(
+                            snackbar = Snackbar.make(
                                 requireView(),
                                 response.message,
                                 Snackbar.LENGTH_LONG
@@ -186,11 +189,17 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                                 val action =
                                     DetailFragmentDirections.actionDetailFragmentToCartFragment()
                                 findNavController().navigate(action)
-                            }.show()
+                            }
+                            snackbar?.show()
                         }
                     }
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        snackbar?.dismiss()
     }
 }

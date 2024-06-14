@@ -19,6 +19,7 @@ import com.dogactanriverdi.e_commerceapp.databinding.FragmentSignInBinding
 import com.dogactanriverdi.e_commerceapp.domain.model.auth.SignInBody
 import com.dogactanriverdi.e_commerceapp.presentation.signin.state.SignInState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -29,8 +30,8 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
 
     private val viewModel: SignInViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         lifecycleScope.launch {
             val userId = readUserId(requireContext(), DATASTORE_USER_ID_KEY)
@@ -42,10 +43,6 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
                 }
             }
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         val signInState = viewModel.signInState
 
