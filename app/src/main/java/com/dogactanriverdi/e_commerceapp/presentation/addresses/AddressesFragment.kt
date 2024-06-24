@@ -87,7 +87,12 @@ class AddressesFragment : Fragment(R.layout.fragment_addresses) {
                         tvError.gone()
                         btnAddAddress.visible()
                         rvAddresses.visible()
-                        addressesAdapter.recyclerListDiffer.submitList(response.addresses)
+                        if (response.addresses.isEmpty()) {
+                            tvNoAddresses.visible()
+                        } else {
+                            tvNoAddresses.gone()
+                            addressesAdapter.recyclerListDiffer.submitList(response.addresses)
+                        }
                     }
                 }
             }

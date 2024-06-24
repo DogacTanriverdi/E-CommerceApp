@@ -31,14 +31,18 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private val viewModel: ProfileViewModel by viewModels()
 
+    private var snackbar: Snackbar? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                requireActivity().finish()
-            }
-        })
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    requireActivity().finish()
+                }
+            })
 
         val userState = viewModel.userState
         val editProfileState = viewModel.editProfileState
@@ -111,7 +115,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                         btnChangePassword.isEnabled = true
                         pbChangePassword.gone()
                         tvChangePasswordError.gone()
-                        Snackbar.make(requireView(), user.message, Snackbar.LENGTH_SHORT).show()
+                        snackbar = Snackbar.make(requireView(), user.message, Snackbar.LENGTH_SHORT)
+                        snackbar?.show()
                     }
                 }
             }
@@ -140,7 +145,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                         btnSave.isEnabled = true
                         pbEditProfile.gone()
                         tvEditProfileError.gone()
-                        Snackbar.make(requireView(), user.message, Snackbar.LENGTH_SHORT).show()
+                        snackbar = Snackbar.make(requireView(), user.message, Snackbar.LENGTH_SHORT)
+                        snackbar?.show()
                     }
                 }
             }
@@ -176,5 +182,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        snackbar?.dismiss()
     }
 }

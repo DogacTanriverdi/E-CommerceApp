@@ -57,4 +57,5 @@
     <string name="cvc_is_blank_or_incorrect_please_write_like_445">CVC is blank or incorrect. Please write like: 445</string>
     <string name="payment_completed_logo">Payment completed logo</string>
     <string name="you_have_no_products_in_your_cart">You have no products in your cart</string>
+    <string name="no_addresses">No addresses</string>
 </resources>
