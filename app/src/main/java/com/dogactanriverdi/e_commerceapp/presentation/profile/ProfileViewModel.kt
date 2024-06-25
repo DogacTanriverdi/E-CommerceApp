@@ -131,4 +131,28 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
+
+    fun updateChangePasswordSnackbarShownState() {
+        _changePasswordState.value = changePasswordState.value.copy(
+            isSnackbarShown = true
+        )
+    }
+
+    fun resetChangePasswordSnackbarShownState() {
+        _changePasswordState.value = changePasswordState.value.copy(
+            isSnackbarShown = false
+        )
+    }
+
+    fun updateEditProfileSnackbarShownState() {
+        _editProfileState.value = editProfileState.value.copy(
+            isSnackbarShown = true
+        )
+    }
+
+    fun resetEditProfileSnackbarShownState() {
+        _editProfileState.value = editProfileState.value.copy(
+            isSnackbarShown = false
+        )
+    }
 }

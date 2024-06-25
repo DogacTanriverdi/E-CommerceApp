@@ -31,8 +31,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private val viewModel: ProfileViewModel by viewModels()
 
-    private var snackbar: Snackbar? = null
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -56,6 +54,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     viewModel.getUser(userId)
 
                     btnSave.setOnClickListener {
+                        viewModel.resetEditProfileSnackbarShownState()
+
                         viewModel.editProfile(
                             EditProfileBody(
                                 "",
@@ -67,13 +67,21 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     }
 
                     btnChangePassword.setOnClickListener {
+                        viewModel.resetChangePasswordSnackbarShownState()
                         val newPassword = etNewPassword.text.toString()
                         val verifyPassword = etVerifyPassword.text.toString()
 
-                        if (newPassword == verifyPassword) {
+                        if (newPassword.isBlank()) {
+                            tilNewPassword.error = getString(R.string.password_is_blank)
+                        } else if (verifyPassword.isBlank()) {
+                            tilVerifyPassword.error = getString(R.string.password_is_blank)
+                        }
+                        else if (newPassword == verifyPassword) {
                             viewModel.changePassword(
                                 ChangePasswordBody(newPassword, userId)
                             )
+                            etNewPassword.setText("")
+                            etVerifyPassword.setText("")
                         } else {
                             tilVerifyPassword.error = getString(R.string.passwords_do_not_match)
                         }
@@ -115,8 +123,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                         btnChangePassword.isEnabled = true
                         pbChangePassword.gone()
                         tvChangePasswordError.gone()
-                        snackbar = Snackbar.make(requireView(), user.message, Snackbar.LENGTH_SHORT)
-                        snackbar?.show()
+
+                        if (!state.isSnackbarShown) {
+                            Snackbar.make(requireView(), user.message, Snackbar.LENGTH_SHORT).show()
+                            viewModel.updateChangePasswordSnackbarShownState()
+                        }
                     }
                 }
             }
@@ -145,8 +156,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                         btnSave.isEnabled = true
                         pbEditProfile.gone()
                         tvEditProfileError.gone()
-                        snackbar = Snackbar.make(requireView(), user.message, Snackbar.LENGTH_SHORT)
-                        snackbar?.show()
+
+                        if (!state.isSnackbarShown) {
+                            Snackbar.make(requireView(), user.message, Snackbar.LENGTH_SHORT).show()
+                            viewModel.updateEditProfileSnackbarShownState()
+                        }
                     }
                 }
             }
@@ -182,10 +196,5 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 }
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        snackbar?.dismiss()
     }
 }
